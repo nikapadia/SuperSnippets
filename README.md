@@ -1,1 +1,3 @@
 # SuperSnippets
+
+Super Snippets is a website that allows someone to take code and turn it into an image (possibly other formats such as a PDF). These images will automatically format the code and perform the necessary syntax highlighting. The images can be used by professors/teachers in lecture notes/slideshows to present legible code instead of black text in a different font. The site will also have an interface similar to sites such as Canva or Figma allowing the user to add arrows, text, and other elements to the code snippet. This also includes difference highlighting similar to how GitHub shows commit diffs, which can better display minor changes in code. We also hope to have some sort of integration with GitHub.
