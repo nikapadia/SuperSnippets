@@ -10,7 +10,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^3.1.0"
+    "@astrojs/svelte": "^4.0.2",
+    "astro": "^3.1.0",
+    "svelte": "^4.0.0"
   },
   "devDependencies": {
     "bun-types": "^1.0.2"
