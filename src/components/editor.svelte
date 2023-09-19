@@ -177,14 +177,6 @@
     cursor: pointer;
   }
 
-  /* .toolbar-left {
-    padding-left: 16px;
-}
-
-.toolbar-right {
-    padding-right: 16px;
-} */
-
   .btn {
     font-size: 18px;
     padding: 8px;

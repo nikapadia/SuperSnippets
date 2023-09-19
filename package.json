@@ -1,5 +1,7 @@
 {
-  "name": "cosmic-comet",
+  "name": "Super Snippets",
+  "author": "Nilay Kapadia, Yash Kaul, Jason Chen, Christopher Boese",
+  "license": "MIT",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
