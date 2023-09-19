@@ -62,18 +62,16 @@
       <button class="toolbar-control-menu btn btn-export"> Export </button>
       <button class="toolbar-control-menu btn btn-share"> Share </button>
       <div class="toolbar-control-menu zoom">
-        <div>
-            100%
-        </div>
+        <div>100%</div>
       </div>
     </div>
   </div>
   <div class="field">
-    <div class="sidebar elements">
+    <div class="sidebar sidebar-elements">
       <div class="sb-title">Elements</div>
     </div>
     <div class="workspace" />
-    <div class="sidebar properties">
+    <div class="sidebar sidebar-properties">
       <div class="sb-title">Properties</div>
     </div>
   </div>
@@ -96,7 +94,7 @@
     height: 48px;
     background: #2c2c2c;
     color: white; */
-    /* position: absolute; */
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
@@ -172,7 +170,6 @@
     padding: 8px;
     border: 0px;
     text-align: center;
-
   }
 
   .zoom:hover {
@@ -218,10 +215,21 @@
   .sidebar {
     background: #2c2c2c;
     width: 240px;
-    /* height: 900px; */
+    position: absolute;
+    height: 100%;
+    top: 48px;
     /* bottom: 0; */
-    overflow-y: auto;
+    /* overflow-y: auto; */
+    overflow: hidden;
     scrollbar-width: none;
+  }
+
+  .sidebar-properties {
+    right: 0;
+  }
+
+  .sidebar-elements {
+    left: 0;
   }
 
   .sb-title {
