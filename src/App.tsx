@@ -1,7 +1,7 @@
 import React from 'react';
 
 // ===== COMPONENTS =====
-import Toolbar from './components/toolbar/toolbar.tsx'
+import Toolbar from './components/toolbar/Toolbar.tsx'
 import ElementsPanel from './components/elements/ElementsPanel.tsx'
 import PropertiesPanel from './components/properties/PropertiesPanel.tsx'
 
