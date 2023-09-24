@@ -1,0 +1,28 @@
+.sidebar {
+	background: #2c2c2c;
+	width: 240px;
+	position: absolute;
+	height: 100%;
+    top: 48px;
+	/* bottom: 0; */
+	/* overflow-y: auto; */
+	overflow: hidden;
+	scrollbar-width: none;
+}
+
+.sidebar-properties {
+	right: 0;
+}
+
+.sidebar-elements {
+	left: 0;
+}
+
+.sb-title {
+	color: white;
+	font-size: 28px;
+	text-align: center;
+	padding: 16px 0 16px 0;
+	border-top: 1px solid grey;
+	border-bottom: 1px solid grey;
+}
