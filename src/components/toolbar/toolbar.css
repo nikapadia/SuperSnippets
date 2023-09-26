@@ -1,3 +1,26 @@
 .toolbar {
     border-bottom: 1px solid #353535;
 }
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown-container:hover .dropdown {
+    display: block;
+}
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background-color: #b52020;
+    color: #fff;
+    transition: background-color 0.25s;
+}
+

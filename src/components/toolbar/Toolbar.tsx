@@ -1,7 +1,7 @@
 import React from 'react';
 import './toolbar.css';
-
-import {CodeBlock, TextT, ArrowUpRight, Images } from "@phosphor-icons/react"
+import {CodeBlock, TextT, Images } from "@phosphor-icons/react";
+import HoverDropdown from './HoverDropdown';
 
 function Toolbar() {
   return (
@@ -14,9 +14,7 @@ function Toolbar() {
           <div className="box-content h-8 w-8 p-2 hover:bg-black">
             <TextT width={32} height={32} color="#fff"/>
           </div>
-          <div className="box-content h-8 w-8 p-2 hover:bg-black">
-            <ArrowUpRight width={32} height={32} color="#fff"/>
-          </div>
+          <HoverDropdown />
           <div className="box-content h-8 w-8 p-2 hover:bg-black">
             <Images width={32} height={32} color="#fff"/>
           </div>
