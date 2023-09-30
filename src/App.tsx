@@ -11,12 +11,7 @@ import './app.css';
 function App() {
     return (
         <div>
-            {/* <Toolbar /> */}
-            <div>
-                {/* <ElementsPanel /> */}
-                <Canvas />
-                {/* <PropertiesPanel /> */}
-            </div>
+            <Canvas />
         </div>
     );
 }
