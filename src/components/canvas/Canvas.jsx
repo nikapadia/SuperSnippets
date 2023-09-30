@@ -1,59 +1,73 @@
-import {useOnDraw} from './Hooks';
-import './Canvas.css';
+import React, { useLayoutEffect, useState } from "react";
+import rough from "roughjs/bundled/rough.esm";
 
-const Canvas = ({
-    width,
-    height
-}) => {
+// import "canvas.css"
 
-    const {
-        setCanvasRef,
-        onCanvasMouseDown
-    } = useOnDraw(onDraw);
+const generator = rough.generator();
 
-    function onDraw(ctx, point, prevPoint) {
-        drawLine(prevPoint, point, ctx, '#000000', 5);
-    }
-
-    function drawLine(
-        start,
-        end,
-        ctx,
-        color,
-        width
-    ) {
-        start = start ?? end;
-        ctx.beginPath();
-        ctx.lineWidth = width;
-        ctx.strokeStyle = color;
-        ctx.moveTo(start.x, start.y);
-        ctx.lineTo(end.x, end.y);
-        ctx.stroke();
-
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(start.x, start.y, 2, 0, 2 * Math.PI);
-        ctx.fill();
-
-    }
-
-    return(
-        <div class="canvas-container">
-            <canvas
-                width={width}
-                height={height}
-                onMouseDown={onCanvasMouseDown}
-                style={canvasStyle}
-                ref={setCanvasRef}
-            />
-        </div>
-    );
-
+function createElement(x1, y1, x2, y2) {
+    const roughElement = generator.line(x1, y1, x2-x1, y2-y1);
+    return {
+        roughElement,
+        x1,
+        y1,
+        x2,
+        y2,
+    };
 }
 
-export default Canvas;
+const App = () => {
+	const [elements, setElements] = useState([]);
+	const [drawing, setDrawing] = useState(false);
 
-const canvasStyle = {
-    border: "1px solid black",
-    backgroundColor: "white"
-}
+	useLayoutEffect(() => {
+		const canvas = document.getElementById("canvas");
+		const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		const roughCanvas = rough.canvas(canvas);
+		elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
+	}, [elements]);
+
+	const handleMouseDown = (event) => {
+        setDrawing(true);
+        
+        const { clientX, clientY } = event;
+
+        const element = createElement(clientX,clientY,clientX,clientY);
+        setElements(prevState => [...prevState, element]);
+    };
+    
+	const handleMouseUp = (event) => {
+        setDrawing(false);
+    };
+
+	const handleMouseMove = (event) => {
+        if (!drawing) {
+            return;
+        }
+
+        const { clientX, clientY } = event;
+        const index = elements.length - 1;
+        const {x1, y1} = elements[index];
+        const updatedElement = createElement(x1, y1, clientX, clientY);
+
+        const elementsCopy = [...elements]; 
+        elementsCopy[index] = updatedElement;
+        setElements(elementsCopy);
+
+    };
+
+	return (
+		<canvas
+			id="canvas"
+			width={500}
+			height={500}
+			onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+		/>
+	);
+};
+
+export default App;
