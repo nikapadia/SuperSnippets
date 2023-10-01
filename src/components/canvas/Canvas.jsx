@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useState } from "react";
 import rough from "roughjs/bundled/rough.esm";
 
 import "./canvas.css"
+import { useEffect } from "react";
 
 const generator = rough.generator();
 
@@ -108,8 +109,31 @@ const resizedCoordinates = (clientX, clientY, position, coordiates) => {
     }
 }
 
+const useHistory = (initialState) => {
+    const [index, setIndex] = useState(0); // index of current state 
+    const [history, setHistory] = useState([initialState]); // array of states
+
+    const setState = (action, overwrite = false) => {
+        const newState = typeof action === "function" ? action(history[index]) : action;
+        if (overwrite) {
+            const historyCopy = [...history];
+            historyCopy[index] = newState;
+            setHistory(historyCopy);
+        } else {
+            const updatedState = [...history].slice(0, index + 1);
+            setHistory([...updatedState, newState]);
+            setIndex(prevIndex => prevIndex + 1);
+        }
+    };
+
+    const undo = () => index > 0 && setIndex(prevIndex => prevIndex - 1);
+    const redo = () => index < history.length - 1 && setIndex(prevIndex => prevIndex + 1);
+
+    return [history[index], setState, undo, redo];
+}
+
 const App = () => {
-	const [elements, setElements] = useState([]);
+	const [elements, setElements, undo, redo] = useHistory([]);
 	const [action, setAction] = useState("none");
     const [tool, setTool] = useState("line");
     const [selectedElement, setSelectedElement] = useState(null);
@@ -123,12 +147,27 @@ const App = () => {
 		elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
 	}, [elements]);
 
+    useEffect(() => {
+        const undoRedoHandler = event => {
+            if ((event.metaKey || event.ctrlKey) && event.key === "z") {
+                undo();
+            } else if ((event.metaKey || event.ctrlKey) && event.key === "y") {
+                redo();
+            }
+        };
+
+        document.addEventListener("keydown", undoRedoHandler);
+        return () => {
+            document.removeEventListener("keydown", undoRedoHandler);
+        };
+	}, [undo, redo]);
+
     const updateElement = (id, x1, y1, x2, y2, type) => {
         const updatedElement = createElement(id, x1, y1, x2, y2, type);
 
         const elementsCopy = [...elements];
         elementsCopy[id] = updatedElement;
-        setElements(elementsCopy);
+        setElements(elementsCopy, true);
     };
 
 	const handleMouseDown = (event) => {
@@ -139,6 +178,8 @@ const App = () => {
                 const offsetX = clientX - element.x1; 
                 const offsetY = clientY - element.y1; 
                 setSelectedElement({...element, offsetX, offsetY});
+                // setElements(prevState => prevState.filter(el => el.id !== element.id));
+                setElements(prevState => prevState);
 
                 if (element.position === "inside") {
                     setAction("moving");
@@ -156,11 +197,13 @@ const App = () => {
     };
     
 	const handleMouseUp = (event) => {
-        const index = selectedElement.id;
-        const {id, type} = elements[index];
-        if (action === "drawing" || action === "resizing") {
-            const {x1, x2, y1, y2} = adjustElementCoordinates(elements[index]);
-            updateElement(id, x1, y1, x2, y2, type);
+        if (selectedElement) {
+            const index = selectedElement.id;
+            const {id, type} = elements[index];
+            if (action === "drawing" || action === "resizing") {
+                const {x1, x2, y1, y2} = adjustElementCoordinates(elements[index]);
+                updateElement(id, x1, y1, x2, y2, type);
+            }
         }
         setAction("none");
         setSelectedElement(null);
@@ -217,6 +260,10 @@ const App = () => {
                 onChange={() => setTool("rectangle")}
                 />
                 <label htmlFor="rectangle">Rectangle</label>                
+            </div>
+            <div style={{position: "fixed", bottom: 0, padding: 10, zIndex: 2}}>
+                <button onClick={undo}>Undo</button>
+                <button onClick={redo}>Redo</button>
             </div>
             <canvas
                 id="canvas"
