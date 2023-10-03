@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import rough from "roughjs/bundled/rough.esm";
+import { getStroke } from "perfect-freehand";
 
 import "./canvas.css"
 import { useEffect } from "react";
@@ -7,10 +8,19 @@ import { useEffect } from "react";
 const generator = rough.generator();
 
 function createElement(id, x1, y1, x2, y2, type) {
-    const roughElement = type === "line" 
-        ? generator.line(x1, y1, x2, y2, {roughness: 0})
-        : generator.rectangle(x1, y1, x2 - x1, y2 - y1, {roughness: 0});
-        // : generator.circle(x1, y1, Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)), {roughness: 0.25, fill: "red"});
+    let roughElement = null;
+    switch (type) {
+        case "line":
+            roughElement = generator.line(x1, y1, x2, y2, { roughness: 0 });
+            break;
+        case "rectangle":
+            roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, { roughness: 0 });
+            break;
+        case "pen":
+            return {id, type, points: [{x: x1, y: y1}]};
+        default:
+            throw new Error(`Invalid element type: ${type}`);
+    }
     return {
         id,
         roughElement,
@@ -26,24 +36,40 @@ const nearPoint = (x, y, x1, y1, name) => {
     return Math.abs(x - x1) < 5 && Math.abs(y - y1) < 5 ? name : null;
 }
 
+const onLine = (x, y, x1, y1, x2, y2) => {
+    const a = {x: x1, y: y1};
+    const b = {x: x2, y: y2};
+    const c = {x, y};
+    const offset = distance(a, b) - (distance(a, c) + distance(b, c));
+    return Math.abs(offset) < 1 ? "inside" : null;
+};
+
 const positionWithinElement = (x, y, element) => {
     const {type, x1, x2, y1, y2} = element;
-    if (type === "rectangle") {
-        const topLeft = nearPoint(x, y, x1, y1, "tl");
-        const topRight = nearPoint(x, y, x2, y1, "tr");
-        const bottomLeft = nearPoint(x, y, x1, y2, "bl");
-        const bottomRight = nearPoint(x, y, x2, y2, "br");
-        const inside = x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
-        return topLeft || topRight || bottomLeft || bottomRight || inside;
-    } else {
-        const a = {x: x1, y: y1};
-        const b = {x: x2, y: y2};
-        const c = {x, y};
-        const offset = distance(a, b) - (distance(a, c) + distance(b, c));
-        const start = nearPoint(x, y, x1, y1, "start");
-        const end = nearPoint(x, y, x2, y2, "end");
-        const inside = Math.abs(offset) < 1 ? "inside" : null;
-        return start || end || inside;
+    switch(type) {
+        case "line":
+            const on = onLine(x, y, x1, y1, x2, y2);
+            const start = nearPoint(x, y, x1, y1, "start");
+            const end = nearPoint(x, y, x2, y2, "end");
+            return start || end || on;
+        case "rectangle":
+            const topLeft = nearPoint(x, y, x1, y1, "tl");
+            const topRight = nearPoint(x, y, x2, y1, "tr");
+            const bottomLeft = nearPoint(x, y, x1, y2, "bl");
+            const bottomRight = nearPoint(x, y, x2, y2, "br");
+            const inside = x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
+            return topLeft || topRight || bottomLeft || bottomRight || inside;
+        case "pen":
+            const betweenAnyPoint = element.points.some((point, index) => {
+                const nextPoint = element.points[index + 1];
+                if (nextPoint) {
+                    return onLine(x, y, point.x, point.y, nextPoint.x, nextPoint.y);
+                }
+                return false;
+            });
+
+        default:
+            throw new Error(`Invalid element type: ${type}`);
     }
 };
 
@@ -132,6 +158,49 @@ const useHistory = (initialState) => {
     return [history[index], setState, undo, redo];
 }
 
+const getSvgPathFromStroke = stroke => {
+    if (!stroke.length) return "";
+  
+    const d = stroke.reduce(
+      (acc, [x0, y0], i, arr) => {
+        const [x1, y1] = arr[(i + 1) % arr.length];
+        acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+        return acc;
+      },
+      ["M", ...stroke[0], "Q"]
+    );
+  
+    d.push("Z");
+    return d.join(" ");
+  };
+
+
+const drawElement = (roughCanvas, context, element) => {
+    switch (element.type) {
+        case "line":
+            roughCanvas.draw(element.roughElement);
+            break;
+        case "rectangle":
+            roughCanvas.draw(element.roughElement);
+            break;
+        case "pen":
+            const stroke = getSvgPathFromStroke(getStroke(element.points, {
+                size: 24,
+                thinning: 0.7,
+                smoothing: 0.5,
+                streamline: 0.5,
+                easing: (t) => t * t,
+                simulatePressure: false,
+            }));
+            context.fill(new Path2D(stroke));
+            break;
+        default:
+            throw new Error(`Invalid element type: ${element.type}`);
+    }
+}
+
+const adjustmentRequired = type => type === ["line", "rectangle"].includes(type);
+
 const App = () => {
 	const [elements, setElements, undo, redo] = useHistory([]);
 	const [action, setAction] = useState("none");
@@ -140,45 +209,89 @@ const App = () => {
     
 	useLayoutEffect(() => {
 		const canvas = document.getElementById("canvas");
-		const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+		const context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-		const roughCanvas = rough.canvas(canvas);
-		elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
+        const roughCanvas = rough.canvas(canvas);
+
+        elements.forEach(element => drawElement(roughCanvas, context, element));
 	}, [elements]);
 
     useEffect(() => {
-        const undoRedoHandler = event => {
-            if ((event.metaKey || event.ctrlKey) && event.key === "z") {
-                undo();
-            } else if ((event.metaKey || event.ctrlKey) && event.key === "y") {
-                redo();
+        const keyHandler = event => {
+            switch (event.key) {
+                case "v":
+                case "1":
+                    setTool("selection");
+                    break;
+                case "l":
+                case "2":
+                    setTool("line");
+                    break;
+                case "r":
+                case "3":
+                    setTool("rectangle");
+                    break;
+                case "t":
+                case "4":
+                    setTool("text");
+                    break;
+                case "p":
+                case "5":
+                    setTool("pen");
+                    break;
+                case "z":
+                    if (event.metaKey || event.ctrlKey) {
+                        undo();
+                    }
+                    break;
+                case "Z":
+                    if (event.metaKey || event.ctrlKey && event.shiftKey) {
+                        redo();
+                    }
+                    break;
+                default:
+                    break;
             }
         };
 
-        document.addEventListener("keydown", undoRedoHandler);
+        document.addEventListener("keydown", keyHandler);
         return () => {
-            document.removeEventListener("keydown", undoRedoHandler);
+            document.removeEventListener("keydown", keyHandler);
         };
 	}, [undo, redo]);
 
     const updateElement = (id, x1, y1, x2, y2, type) => {
-        const updatedElement = createElement(id, x1, y1, x2, y2, type);
+		const elementsCopy = [...elements];
 
-        const elementsCopy = [...elements];
-        elementsCopy[id] = updatedElement;
+		switch (type) {
+			case "line":
+			case "rectangle":
+				elementsCopy[id] = createElement(id, x1, y1, x2, y2, type);
+                break;
+			case "pen":
+                elementsCopy[id].points = [...elementsCopy[id].points, {x: x2, y: y2}];
+                break;
+            default:
+				throw new Error(`Invalid element type: ${type}`);
+        }
         setElements(elementsCopy, true);
-    };
+	};
 
 	const handleMouseDown = (event) => {
         const { clientX, clientY } = event;
         if (tool === "selection") {
             const element = getElementAtPosition(clientX, clientY, elements);
             if (element) {
-                const offsetX = clientX - element.x1; 
-                const offsetY = clientY - element.y1; 
-                setSelectedElement({...element, offsetX, offsetY});
-                // setElements(prevState => prevState.filter(el => el.id !== element.id));
+                if (element.type === "pen") {
+                    const xOffsets = element.points.map(point => clientX - point.x);
+                    const yOffsets = element.points.map(point => clientY - point.y);
+                    setSelectedElement({...element, xOffsets, yOffsets});
+                } else {
+                    const offsetX = clientX - element.x1; 
+                    const offsetY = clientY - element.y1; 
+                    setSelectedElement({...element, offsetX, offsetY});
+                }
                 setElements(prevState => prevState);
 
                 if (element.position === "inside") {
@@ -200,7 +313,7 @@ const App = () => {
         if (selectedElement) {
             const index = selectedElement.id;
             const {id, type} = elements[index];
-            if (action === "drawing" || action === "resizing") {
+            if ((action === "drawing" || action === "resizing") && adjustmentRequired(type)) {
                 const {x1, x2, y1, y2} = adjustElementCoordinates(elements[index]);
                 updateElement(id, x1, y1, x2, y2, type);
             }
@@ -222,12 +335,22 @@ const App = () => {
             const {x1, y1} = elements[index];
             updateElement(index, x1, y1, clientX, clientY, tool);
         } else if (action === "moving") {
-            const { id, x1, x2, y1, y2, type, offsetX, offsetY } = selectedElement;
-            const width = x2 - x1;
-            const height = y2 - y1;
-            const newX1 = clientX - offsetX;
-            const newY1 = clientY - offsetY;
-            updateElement(id, newX1, newY1, newX1 + width, newY1 + height, type);
+            if (selectedElement.type === "pen") {
+                const newPoints = selectedElement.points.map(_, index => ({
+                    x: clientX - selectedElement.xOffsets[index],
+                    y: clientY - selectedElement.yOffsets[index],
+                }));
+                const elementsCopy = [...elements];
+                elementsCopy[selectedElement.id].points = newPoints;
+                setElements(elementsCopy, true);
+            } else {
+                const { id, x1, x2, y1, y2, type, offsetX, offsetY } = selectedElement;
+                const width = x2 - x1;
+                const height = y2 - y1;
+                const newX1 = clientX - offsetX;
+                const newY1 = clientY - offsetY;
+                updateElement(id, newX1, newY1, newX1 + width, newY1 + height, type);
+            }
         } else if (action === "resizing") {
             const { id, type, position, ...coordiates } = selectedElement;
             const {x1, y1, x2, y2} = resizedCoordinates(clientX, clientY, position, coordiates);
@@ -260,8 +383,22 @@ const App = () => {
                 onChange={() => setTool("rectangle")}
                 />
                 <label htmlFor="rectangle">Rectangle</label>                
+                <input
+                type="radio"
+                id="text"
+                checked={tool === "text"}
+                onChange={() => setTool("text")}
+                />
+                <label htmlFor="text">Text</label>                
+                <input
+                type="radio"
+                id="pen"
+                checked={tool === "pen"}
+                onChange={() => setTool("pen")}
+                />
+                <label htmlFor="pen">Pen</label>                
             </div>
-            <div style={{position: "fixed", bottom: 0, padding: 10, zIndex: 2}}>
+            <div style={{position: "fixed", bottom: 0, padding: 2, zIndex: 2}}>
                 <button onClick={undo}>Undo</button>
                 <button onClick={redo}>Redo</button>
             </div>
