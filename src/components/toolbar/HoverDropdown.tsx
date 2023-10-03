@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import {ArrowUpRight} from "@phosphor-icons/react"
 
 
-function eatCheese()
-{
-    console.log("Cheese has been eaten");
-}
+
 
 function HoverDropdown() {
     const [isHovered, setIsHovered] = useState(false);
@@ -21,7 +18,7 @@ function HoverDropdown() {
             </div>
             {isHovered && (
                 <div className="dropdown">
-                    <button className ="dropdown-item" onClick={eatCheese}>Arrow One</button>
+                    <button className ="dropdown-item">Arrow One</button>
                     <button className = "dropdown-item">Arrow Two</button>
                     <button className = "dropdown-item">Arrow Three</button>
                 </div>
