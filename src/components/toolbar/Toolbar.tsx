@@ -1,6 +1,6 @@
 import React from 'react';
 import './toolbar.css';
-import {CodeBlock, TextT, Images } from "@phosphor-icons/react";
+import {CodeBlock, TextT, Images, Pen, Square } from "@phosphor-icons/react";
 import HoverDropdown from './HoverDropdown';
 
 function Toolbar() {
@@ -17,6 +17,12 @@ function Toolbar() {
           <HoverDropdown />
           <div className="box-content h-8 w-8 p-2 hover:bg-black">
             <Images width={32} height={32} color="#fff"/>
+          </div>
+          <div className="box-content h-8 w-8 p-2 hover:bg-black">
+            <Pen width={32} height={32} color="#fff"/>
+          </div>
+          <div className="box-content h-8 w-8 p-2 hover:bg-black">
+            <Square width={32} height={32} color="#fff"/>
           </div>
         </div>
         <div className="flex justify-center items-center h-full basis-2/5">Untitled Document</div>
