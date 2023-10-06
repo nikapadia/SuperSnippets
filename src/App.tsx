@@ -11,7 +11,12 @@ import './app.css';
 function App() {
     return (
         <div>
-            <Canvas />
+            {/* <Toolbar /> */}
+            <div className='editor'>
+                <Canvas />
+                {/* <PropertiesPanel /> */}
+                {/* <ElementsPanel /> */}
+            </div>
         </div>
     );
 }

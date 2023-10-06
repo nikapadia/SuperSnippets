@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useRef } from "react";
 import rough from "roughjs/bundled/rough.esm";
 import { getStroke } from "perfect-freehand";
 
@@ -18,6 +18,8 @@ function createElement(id, x1, y1, x2, y2, type) {
             break;
         case "pen":
             return {id, type, points: [{x: x1, y: y1}]};
+        case "text":
+            return {id, type, x1, y1, text: ""};
         default:
             throw new Error(`Invalid element type: ${type}`);
     }
@@ -154,8 +156,9 @@ const useHistory = (initialState) => {
 
     const undo = () => index > 0 && setIndex(prevIndex => prevIndex - 1);
     const redo = () => index < history.length - 1 && setIndex(prevIndex => prevIndex + 1);
-
-    return [history[index], setState, undo, redo];
+    const clear = () => { setHistory([initialState]); setIndex(0); }; 
+    
+    return [history[index], setState, undo, redo, clear];
 }
 
 const getSvgPathFromStroke = stroke => {
@@ -194,6 +197,10 @@ const drawElement = (roughCanvas, context, element) => {
             }));
             context.fill(new Path2D(stroke));
             break;
+        case "text":
+            context.font = "48px serif";
+            context.fillText(element.text, element.x1, element.y1);
+            break;
         default:
             throw new Error(`Invalid element type: ${element.type}`);
     }
@@ -202,10 +209,11 @@ const drawElement = (roughCanvas, context, element) => {
 const adjustmentRequired = type => type === ["line", "rectangle"].includes(type);
 
 const App = () => {
-	const [elements, setElements, undo, redo] = useHistory([]);
+	const [elements, setElements, undo, redo, clear] = useHistory([]);
 	const [action, setAction] = useState("none");
     const [tool, setTool] = useState("line");
     const [selectedElement, setSelectedElement] = useState(null);
+    const textAreaRef = useRef();
     
 	useLayoutEffect(() => {
 		const canvas = document.getElementById("canvas");
@@ -217,10 +225,12 @@ const App = () => {
         elements.forEach(element => drawElement(roughCanvas, context, element));
 	}, [elements]);
 
+    // Handle keyboard shortcuts
     useEffect(() => {
         const keyHandler = event => {
             switch (event.key) {
                 case "v":
+                case "s":
                 case "1":
                     setTool("selection");
                     break;
@@ -261,7 +271,14 @@ const App = () => {
         };
 	}, [undo, redo]);
 
-    const updateElement = (id, x1, y1, x2, y2, type) => {
+    // Handle text input
+    useEffect(() => {
+        const textArea = textAreaRef.current;
+        if (action === "writing")
+            textArea.focus();
+    }, [action, selectedElement]);
+
+    const updateElement = (id, x1, y1, x2, y2, type, options) => {
 		const elementsCopy = [...elements];
 
 		switch (type) {
@@ -272,6 +289,9 @@ const App = () => {
 			case "pen":
                 elementsCopy[id].points = [...elementsCopy[id].points, {x: x2, y: y2}];
                 break;
+            case "text":
+                elementsCopy[id].text = options.text;
+                break;
             default:
 				throw new Error(`Invalid element type: ${type}`);
         }
@@ -279,6 +299,9 @@ const App = () => {
 	};
 
 	const handleMouseDown = (event) => {
+        if (action === "writing") return;
+
+
         const { clientX, clientY } = event;
         if (tool === "selection") {
             const element = getElementAtPosition(clientX, clientY, elements);
@@ -305,7 +328,7 @@ const App = () => {
             const element = createElement(id, clientX,clientY,clientX,clientY, tool);
             setElements(prevState => [...prevState, element]);
             setSelectedElement(element);
-            setAction("drawing");          
+            setAction(tool === "text" ? "writing" : "drawing");          
         }
     };
     
@@ -318,6 +341,10 @@ const App = () => {
                 updateElement(id, x1, y1, x2, y2, type);
             }
         }
+
+        if (action === "writing") return;
+
+
         setAction("none");
         setSelectedElement(null);
     };
@@ -358,6 +385,13 @@ const App = () => {
         }
 
     };
+
+    const handleBlur = event => {
+        const {id, x1, y1, type} = selectedElement;
+        setAction("none");
+        setSelectedElement(null);
+        updateElement(id, x1, y1, null, null, type, {text: event.target.value});
+    }
 
 	return (
         <div>
@@ -401,7 +435,14 @@ const App = () => {
             <div style={{position: "fixed", bottom: 0, padding: 2, zIndex: 2}}>
                 <button onClick={undo}>Undo</button>
                 <button onClick={redo}>Redo</button>
+                <button onClick={clear}>Clear</button>
             </div>
+            {action === "writing" ? (
+                <textarea
+                    ref={textAreaRef}
+                    onBlur={handleBlur} 
+                    style={{position: "fixed", zIndex: 2, top: selectedElement.y1, left: selectedElement.x1}} />
+            ): null}
             <canvas
                 id="canvas"
                 style={canvasStyle}
@@ -417,9 +458,6 @@ const App = () => {
 
 const canvasStyle = {
     border: "1px solid black",
-    // margin: "auto",
-    // marginTop: "50px",
-    // display: "block",
     backgroundColor: "white",
     position: "fixed",
     top: 0,
