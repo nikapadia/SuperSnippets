@@ -4,8 +4,9 @@ import { MuiColorInput } from 'mui-color-input'
 const ColorPicker = () => {
   const [color, setColor] = React.useState('#ffffff')
 
-  const handleChange = (color) => {
-    setColor(color)
+  const handleChange = (newColor: React.SetStateAction<string> | null) => {
+    document.documentElement.style.setProperty('--color-picker-bg', newColor as string);
+    setColor(newColor as string);
   }
 
   return (

@@ -1,4 +1,3 @@
-import React from 'react';
 import './toolbar.css';
 
 import {CodeBlock, TextT, ArrowUpRight, Images } from "@phosphor-icons/react"

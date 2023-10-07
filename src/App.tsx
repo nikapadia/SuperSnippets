@@ -1,4 +1,3 @@
-import React from 'react';
 
 // ===== COMPONENTS =====
 import Toolbar from './components/toolbar/Toolbar.tsx'
