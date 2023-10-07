@@ -24,3 +24,23 @@
     transition: background-color 0.25s;
 }
 
+.dropdown-item-square {
+    cursor: pointer;
+    background-color: rgb(58, 58, 58);
+    color: #fff;
+    transition: background-color 0.25s;
+    display:block;
+    height:40px;
+    width:150px;
+    font-size: 13px;
+    border-radius: 0px;
+    transition: border-color 0.25s;
+    text-align:left;
+}
+
+.button-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+

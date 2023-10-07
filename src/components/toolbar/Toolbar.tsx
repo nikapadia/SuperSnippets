@@ -1,7 +1,8 @@
 import React from 'react';
 import './toolbar.css';
-import { CodeBlock, TextT, Images, Pen, Square } from "@phosphor-icons/react";
 import HoverDropdown from './HoverDropdown';
+import ToggleDropdown from './ToggleDropdown';
+
 
 function Toolbar() {
   return (
@@ -11,8 +12,8 @@ function Toolbar() {
           <HoverDropdown buttonType={"codeblock"} />
           <HoverDropdown buttonType={"textt"} />
           <HoverDropdown buttonType={"images"} />
-          <HoverDropdown buttonType={"pen"} />
-          <HoverDropdown buttonType={"square"}/>
+          <HoverDropdown buttonType={"pen"} /> 
+          <ToggleDropdown />
         </div>
         <div className="flex justify-center items-center h-full basis-2/5">Untitled Document</div>
         <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
