@@ -1,7 +1,8 @@
 import React from 'react';
 import './toolbar.css';
 import HoverDropdown from './HoverDropdown';
-import ToggleDropdown from './ToggleDropdown';
+import Dropdown from './Dropdown';
+
 
 
 function Toolbar() {
@@ -13,7 +14,8 @@ function Toolbar() {
           <HoverDropdown buttonType={"textt"} />
           <HoverDropdown buttonType={"images"} />
           <HoverDropdown buttonType={"pen"} /> 
-          <ToggleDropdown />
+          <Dropdown/>
+          
         </div>
         <div className="flex justify-center items-center h-full basis-2/5">Untitled Document</div>
         <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
