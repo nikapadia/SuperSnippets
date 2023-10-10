@@ -1,0 +1,11 @@
+.toolList {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* justify-content: center; */
+    width: 100%;
+    margin-top: 10px;
+    color: blue;
+    top: 0;
+    left: 0;
+}
