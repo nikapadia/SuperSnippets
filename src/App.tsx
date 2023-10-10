@@ -11,11 +11,11 @@ import './app.css';
 function App() {
     return (
         <div>
-            {/* <Toolbar /> */}
+            <Toolbar />
             <div className='editor'>
+                <PropertiesPanel />
                 <Canvas />
-                {/* <PropertiesPanel /> */}
-                {/* <ElementsPanel /> */}
+                <ElementsPanel />
             </div>
         </div>
     );

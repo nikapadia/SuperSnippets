@@ -69,7 +69,8 @@ const positionWithinElement = (x, y, element) => {
                 }
                 return false;
             });
-
+        case "text":
+            return x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
         default:
             throw new Error(`Invalid element type: ${type}`);
     }
@@ -198,6 +199,7 @@ const drawElement = (roughCanvas, context, element) => {
             context.fill(new Path2D(stroke));
             break;
         case "text":
+            context.textBaseline = "top";
             context.font = "48px serif";
             context.fillText(element.text, element.x1, element.y1);
             break;
@@ -208,7 +210,7 @@ const drawElement = (roughCanvas, context, element) => {
 
 const adjustmentRequired = type => type === ["line", "rectangle"].includes(type);
 
-const App = () => {
+const Canvas = () => {
 	const [elements, setElements, undo, redo, clear] = useHistory([]);
 	const [action, setAction] = useState("none");
     const [tool, setTool] = useState("line");
@@ -446,8 +448,8 @@ const App = () => {
             <canvas
                 id="canvas"
                 style={canvasStyle}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={1200}
+                height={600}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
                 onMouseMove={handleMouseMove}
@@ -459,9 +461,9 @@ const App = () => {
 const canvasStyle = {
     border: "1px solid black",
     backgroundColor: "white",
-    position: "fixed",
+    position: "absolute",
     top: 0,
     left: 0,
 };
 
-export default App;
+export default Canvas;
