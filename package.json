@@ -12,8 +12,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.12",
     "@phosphor-icons/react": "^2.0.13",
+    "mui": "^0.0.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0"

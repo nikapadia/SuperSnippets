@@ -23,8 +23,21 @@ export default function BasicMenu() {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
+                sx={{
+                    '&:focus': {
+                        outline: 'none',
+                    },
+                    '&:hover': {
+                        backgroundColor: 'transparent',
+                    },
+                    width: 0.001,
+                    height: '32px',
+                }}
+                
             >
-                <Square width={32} height={32} color="#fff" />
+                <div className="box-content h-8 w-8 p-2 hover:bg-black">
+                    <Square width={32} height={32} color="#fff" />
+                </div>
             </Button>
             <Menu
                 id="basic-menu"

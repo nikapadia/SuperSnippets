@@ -2,7 +2,27 @@ import React from 'react';
 import './toolbar.css';
 import HoverDropdown from './HoverDropdown';
 import Dropdown from './Dropdown';
+import DropdownMenu from './Pain';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+
+
+const theme = createTheme({
+  components: {
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#3a3a3a', 
+          color: 'white', 
+          '&:hover': {
+            backgroundColor: '#4e4e4e', 
+            color: 'white', 
+          },
+        },
+      },
+    },
+  },
+});
 
 
 function Toolbar() {
@@ -10,12 +30,10 @@ function Toolbar() {
     <>
       <div className="toolbar flex justify-between flex-row absolute box-border bg-core-grey z-10 inset-0 h-12 w-full">
         <div className="flex justify-start items-center relative h-full basis-1/3">
-          <HoverDropdown buttonType={"codeblock"} />
-          <HoverDropdown buttonType={"textt"} />
-          <HoverDropdown buttonType={"images"} />
-          <HoverDropdown buttonType={"pen"} /> 
-          <Dropdown/>
-          
+          <ThemeProvider theme={theme}>
+            <DropdownMenu />
+          </ThemeProvider>
+
         </div>
         <div className="flex justify-center items-center h-full basis-2/5">Untitled Document</div>
         <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
