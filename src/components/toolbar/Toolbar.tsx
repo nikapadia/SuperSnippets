@@ -12,17 +12,27 @@ const theme = createTheme({
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          backgroundColor: '#3a3a3a', 
-          color: 'white', 
+          backgroundColor: '#3a3a3a',
+          color: 'white',
           '&:hover': {
-            backgroundColor: '#4e4e4e', 
-            color: 'white', 
+            backgroundColor: '#4e4e4e',
+            color: 'white',
+          },
+          '&.Mui-selected': { // This targets the selected item
+            backgroundColor: '#4f4fff', // replace 'yourSelectedBackgroundColor' with your desired selected background color
+            color: 'white', // replace 'yourSelectedTextColor' with your desired selected text color
+          },
+          '&.Mui-selected:hover': { // This targets the selected item on hover
+            backgroundColor: '#4f4fff', // replace 'yourSelectedHoverBackgroundColor' with your desired selected hover background color
+            color: 'white', // replace 'yourSelectedHoverTextColor' with your desired selected hover text color
           },
         },
       },
     },
   },
 });
+
+
 
 
 function Toolbar() {
