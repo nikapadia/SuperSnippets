@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useRef } from "react";
+import { useLayoutEffect, useState, useRef } from "react";
 import rough from "roughjs/bundled/rough.esm";
 import { getStroke } from "perfect-freehand";
 
@@ -62,6 +62,7 @@ const positionWithinElement = (x, y, element) => {
             const inside = x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
             return topLeft || topRight || bottomLeft || bottomRight || inside;
         case "pen":
+            // @ts-ignore
             const betweenAnyPoint = element.points.some((point, index) => {
                 const nextPoint = element.points[index + 1];
                 if (nextPoint) {
@@ -69,6 +70,7 @@ const positionWithinElement = (x, y, element) => {
                 }
                 return false;
             });
+            break;
         case "text":
             return x >= x1 && x <= x2 && y >= y1 && y <= y2 ? "inside" : null;
         default:
@@ -217,15 +219,15 @@ const Canvas = () => {
     const [selectedElement, setSelectedElement] = useState(null);
     const textAreaRef = useRef();
     
-	useLayoutEffect(() => {
-		const canvas = document.getElementById("canvas");
-		const context = canvas.getContext("2d");
+    useLayoutEffect(() => {
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         const roughCanvas = rough.canvas(canvas);
 
         elements.forEach(element => drawElement(roughCanvas, context, element));
-	}, [elements]);
+    }, [elements]);
 
     // Handle keyboard shortcuts
     useEffect(() => {
@@ -275,10 +277,14 @@ const Canvas = () => {
 
     // Handle text input
     useEffect(() => {
-        const textArea = textAreaRef.current;
-        if (action === "writing")
-            textArea.focus();
+        const textArea = textAreaRef.current as HTMLTextAreaElement;
+        if (action === "writing" && textArea) {
+            if (typeof textArea.focus === "function") {
+                textArea.focus();
+            }
+        }
     }, [action, selectedElement]);
+
 
     const updateElement = (id, x1, y1, x2, y2, type, options) => {
 		const elementsCopy = [...elements];
@@ -322,6 +328,7 @@ const Canvas = () => {
                 if (element.position === "inside") {
                     setAction("moving");
                 } else {
+                    if (element.type === "pen") {setAction("moving");}
                     setAction("resizing");
                 }
             }
@@ -334,13 +341,13 @@ const Canvas = () => {
         }
     };
     
-	const handleMouseUp = (event) => {
+	const handleMouseUp = () => {
         if (selectedElement) {
             const index = selectedElement.id;
             const {id, type} = elements[index];
             if ((action === "drawing" || action === "resizing") && adjustmentRequired(type)) {
                 const {x1, x2, y1, y2} = adjustElementCoordinates(elements[index]);
-                updateElement(id, x1, y1, x2, y2, type);
+                updateElement(id, x1, y1, x2, y2, type, {});
             }
         }
 
@@ -362,10 +369,10 @@ const Canvas = () => {
         if (action === "drawing") {
             const index = elements.length - 1;
             const {x1, y1} = elements[index];
-            updateElement(index, x1, y1, clientX, clientY, tool);
+            updateElement(index, x1, y1, clientX, clientY, tool, {});
         } else if (action === "moving") {
             if (selectedElement.type === "pen") {
-                const newPoints = selectedElement.points.map(_, index => ({
+                const newPoints = selectedElement.points.map((_, index) => ({
                     x: clientX - selectedElement.xOffsets[index],
                     y: clientY - selectedElement.yOffsets[index],
                 }));
@@ -378,12 +385,13 @@ const Canvas = () => {
                 const height = y2 - y1;
                 const newX1 = clientX - offsetX;
                 const newY1 = clientY - offsetY;
-                updateElement(id, newX1, newY1, newX1 + width, newY1 + height, type);
+                updateElement(id, newX1, newY1, newX1 + width, newY1 + height, type, {});
             }
         } else if (action === "resizing") {
+            if (selectedElement.type === "pen") return;
             const { id, type, position, ...coordiates } = selectedElement;
             const {x1, y1, x2, y2} = resizedCoordinates(clientX, clientY, position, coordiates);
-            updateElement(id, x1, y1, x2, y2, type);
+            updateElement(id, x1, y1, x2, y2, type, {});
         }
 
     };
@@ -447,6 +455,7 @@ const Canvas = () => {
             ): null}
             <canvas
                 id="canvas"
+                // @ts-ignore
                 style={canvasStyle}
                 width={1200}
                 height={600}
