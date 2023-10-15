@@ -1,9 +1,9 @@
 import React from 'react';
 import './toolbar.css';
-import HoverDropdown from './HoverDropdown';
-import Dropdown from './Dropdown';
 import DropdownMenu from './Pain';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Select } from '@mui/material';
+
 
 
 
@@ -18,13 +18,13 @@ const theme = createTheme({
             backgroundColor: '#4e4e4e',
             color: 'white',
           },
-          '&.Mui-selected': { // This targets the selected item
-            backgroundColor: '#4f4fff', // replace 'yourSelectedBackgroundColor' with your desired selected background color
-            color: 'white', // replace 'yourSelectedTextColor' with your desired selected text color
+          '&.Mui-selected': {
+            backgroundColor: '#4f4fff',
+            color: 'white',
           },
-          '&.Mui-selected:hover': { // This targets the selected item on hover
-            backgroundColor: '#4f4fff', // replace 'yourSelectedHoverBackgroundColor' with your desired selected hover background color
-            color: 'white', // replace 'yourSelectedHoverTextColor' with your desired selected hover text color
+          '&.Mui-selected:hover': {
+            backgroundColor: '#4f4fff',
+            color: 'white',
           },
         },
       },
@@ -40,9 +40,18 @@ function Toolbar() {
     <>
       <div className="toolbar flex justify-between flex-row absolute box-border bg-core-grey z-10 inset-0 h-12 w-full">
         <div className="flex justify-start items-center relative h-full basis-1/3">
+
+
           <ThemeProvider theme={theme}>
-            <DropdownMenu />
+            
+            <DropdownMenu buttonType="CodeBlock" />
+            <DropdownMenu buttonType="TextT" />
+            <DropdownMenu buttonType="square" />
+            <DropdownMenu buttonType="Cursor" />
           </ThemeProvider>
+
+
+
 
         </div>
         <div className="flex justify-center items-center h-full basis-2/5">Untitled Document</div>
