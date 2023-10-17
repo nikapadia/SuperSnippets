@@ -55,7 +55,8 @@ export default function DropdownMenu({ buttonType, openButton, setOpenButton }) 
                         maxHeight: '48px',
                         minWidth: '48px',
                         minHeight: '48px',
-                        backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                        backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent',
+                        borderRadius: '0px'
                     }}
                 >
 
@@ -204,7 +205,8 @@ export default function DropdownMenu({ buttonType, openButton, setOpenButton }) 
                     maxHeight: '48px',
                     minWidth: '48px',
                     minHeight: '48px',
-                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent',
+                    borderRadius: '0px'
                 }}
             >
                 {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><CodeBlock size={32} color="#fff" />
@@ -227,7 +229,8 @@ export default function DropdownMenu({ buttonType, openButton, setOpenButton }) 
                     maxHeight: '48px',
                     minWidth: '48px',
                     minHeight: '48px',
-                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent',
+                    borderRadius: '0px'
                 }}
             >
                 {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><TextT size={32} color="#fff" />
@@ -251,7 +254,8 @@ export default function DropdownMenu({ buttonType, openButton, setOpenButton }) 
                     maxHeight: '48px',
                     minWidth: '48px',
                     minHeight: '48px',
-                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent',
+                    borderRadius: '0px'
                 }}            >
 
                 {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><Cursor size={32} color="#fff" />
@@ -276,7 +280,8 @@ export default function DropdownMenu({ buttonType, openButton, setOpenButton }) 
                     maxHeight: '48px',
                     minWidth: '48px',
                     minHeight: '48px',
-                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent',
+                    borderRadius: '0px'
                 }}            >
 
                 {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><Pen size={32} color="#fff" />
