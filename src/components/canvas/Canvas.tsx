@@ -468,8 +468,6 @@ const Canvas = () => {
 };
 
 const canvasStyle = {
-    border: "1px solid black",
-    backgroundColor: "white",
     position: "absolute",
     top: 0,
     left: 0,
