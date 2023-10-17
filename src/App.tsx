@@ -5,6 +5,9 @@ import Toolbar from './components/toolbar/Toolbar.tsx'
 import ElementsPanel from './components/elements/ElementsPanel.tsx'
 import PropertiesPanel from './components/properties/PropertiesPanel.tsx'
 import ExportModal from './components/exportmodal/ExportModal.tsx'
+import Canvas from './components/canvas/Canvas.tsx'
+
+import './app.css';
 
 function App() {
     const [isExportOpen, setExportOpen] = useState(false);
@@ -22,8 +25,11 @@ function App() {
              <button onClick={openExport}>Open Export</button>
             <ExportModal isOpen={isExportOpen} onClose={closeExport} />
             <Toolbar onExportClick={openExport} />
-            <ElementsPanel />
-            <PropertiesPanel />
+            <div className='editor'>
+                <PropertiesPanel />
+                <Canvas />
+                <ElementsPanel />
+            </div>
         </div>
     );
 }
