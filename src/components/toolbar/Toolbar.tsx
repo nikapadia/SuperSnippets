@@ -36,6 +36,9 @@ const theme = createTheme({
 
 
 function Toolbar() {
+
+  const [openButton, setOpenButton] = React.useState("Cursor");
+
   return (
     <>
       <div className="toolbar flex justify-between flex-row absolute box-border bg-core-grey z-10 inset-0 h-12 w-full">
@@ -43,11 +46,13 @@ function Toolbar() {
 
 
           <ThemeProvider theme={theme}>
-            
-            <DropdownMenu buttonType="CodeBlock" />
-            <DropdownMenu buttonType="TextT" />
-            <DropdownMenu buttonType="square" />
-            <DropdownMenu buttonType="Cursor" />
+
+            <DropdownMenu buttonType="CodeBlock" openButton={openButton} setOpenButton={setOpenButton} />
+            <DropdownMenu buttonType="TextT" openButton={openButton} setOpenButton={setOpenButton} />
+            <DropdownMenu buttonType="square" openButton={openButton} setOpenButton={setOpenButton} />
+            <DropdownMenu buttonType="Cursor" openButton={openButton} setOpenButton={setOpenButton} />
+            <DropdownMenu buttonType="Pen" openButton={openButton} setOpenButton={setOpenButton} />
+
           </ThemeProvider>
 
 

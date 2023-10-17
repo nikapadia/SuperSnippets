@@ -14,8 +14,11 @@ interface DropdownMenuProps {
 }
 
 
-export default function DropdownMenu({ buttonType }: DropdownMenuProps) {
+export default function DropdownMenu({ buttonType, openButton, setOpenButton }) {
+
     const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
     const fileInput = React.useRef(null);
 
@@ -23,11 +26,18 @@ export default function DropdownMenu({ buttonType }: DropdownMenuProps) {
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+        setIsDropdownOpen(!isDropdownOpen);
+        if (openButton !== buttonType) {
+            setOpenButton(buttonType);
+        }
     };
 
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+
+
 
     if (buttonType === "square") {
         return (
@@ -36,20 +46,37 @@ export default function DropdownMenu({ buttonType }: DropdownMenuProps) {
             <div>
                 <input type="file" ref={fileInput} style={{ display: 'none' }} />
                 <Button
-
+                    disableRipple
                     aria-controls="simple-menu"
                     aria-haspopup="true"
                     onClick={handleClick}
-                    style={{ maxWidth: '48px', maxHeight: '48px', minWidth: '48px', minHeight: '48px', }}
+                    style={{
+                        maxWidth: '48px',
+                        maxHeight: '48px',
+                        minWidth: '48px',
+                        minHeight: '48px',
+                        backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                    }}
                 >
-                    <div className="box-content h-8 w-8 p-2 hover:bg-black">
+
+                    {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]">
                         {selectedItem === "rectangle" && <Square size={32} color="#fff" />}
                         {selectedItem === "line" && <LineSegment size={32} color="#fff" />}
                         {selectedItem === "arrow" && <ArrowUpRight size={32} color="#fff" />}
                         {selectedItem === "ellipse" && <Circle size={32} color="#fff" />}
                         {selectedItem === "polygon" && <Shapes size={32} color="#fff" />}
                         {selectedItem === "star" && <Star size={32} color="#fff" />}
-                    </div>
+                    </div>)}
+
+                    {!(openButton === buttonType) && (<div className="box-content h-8 w-8 p-2 hover:bg-black">
+                        {selectedItem === "rectangle" && <Square size={32} color="#fff" />}
+                        {selectedItem === "line" && <LineSegment size={32} color="#fff" />}
+                        {selectedItem === "arrow" && <ArrowUpRight size={32} color="#fff" />}
+                        {selectedItem === "ellipse" && <Circle size={32} color="#fff" />}
+                        {selectedItem === "polygon" && <Shapes size={32} color="#fff" />}
+                        {selectedItem === "star" && <Star size={32} color="#fff" />}
+                    </div>)}
+
                 </Button>
 
                 <Menu
@@ -142,6 +169,7 @@ export default function DropdownMenu({ buttonType }: DropdownMenuProps) {
                         </MenuItem>
 
                         <MenuItem
+                            disableRipple
                             onClick={() => {
                                 fileInput.current.click();
                                 handleClose();
@@ -167,43 +195,97 @@ export default function DropdownMenu({ buttonType }: DropdownMenuProps) {
     else if (buttonType === "CodeBlock") {
         return (
             <Button
+                disableRipple
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
-                style={{ maxWidth: '48px', maxHeight: '48px', minWidth: '48px', minHeight: '48px', }}
+                style={{
+                    maxWidth: '48px',
+                    maxHeight: '48px',
+                    minWidth: '48px',
+                    minHeight: '48px',
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                }}
             >
-                <div className="box-content h-8 w-8 p-2 hover:bg-black">
-                    <CodeBlock size={32} color="#fff" />
-                </div>
+                {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><CodeBlock size={32} color="#fff" />
+                </div>)}
+
+                {!(openButton === buttonType) && (<div className="box-content h-8 w-8 p-2 hover:bg-black"><CodeBlock size={32} color="#fff" />
+                </div>)}
             </Button>
         );
     }
     else if (buttonType === "TextT") {
         return (
             <Button
+                disableRipple
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
-                style={{ maxWidth: '48px', maxHeight: '48px', minWidth: '48px', minHeight: '48px', }}
+                style={{
+                    maxWidth: '48px',
+                    maxHeight: '48px',
+                    minWidth: '48px',
+                    minHeight: '48px',
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                }}
             >
-                <div className="box-content h-8 w-8 p-2 hover:bg-black">
-                    <TextT size={32} color="#fff" />
-                </div>
+                {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><TextT size={32} color="#fff" />
+                </div>)}
+
+                {!(openButton === buttonType) && (<div className="box-content h-8 w-8 p-2 hover:bg-black"><TextT size={32} color="#fff" />
+                </div>)}
             </Button>
         );
     }
 
     else if (buttonType === "Cursor") {
-        return (<Button
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-            style={{ maxWidth: '48px', maxHeight: '48px', minWidth: '48px', minHeight: '48px', }}
-        >
-            <div className="box-content h-8 w-8 p-2 hover:bg-black">
-                <Cursor size={32} color="#fff" />
-            </div>
-        </Button>
+        return (
+            <Button
+                disableRipple
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={handleClick}
+                style={{
+                    maxWidth: '48px',
+                    maxHeight: '48px',
+                    minWidth: '48px',
+                    minHeight: '48px',
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                }}            >
+
+                {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><Cursor size={32} color="#fff" />
+                </div>)}
+
+                {!(openButton === buttonType) && (<div className="box-content h-8 w-8 p-2 hover:bg-black"><Cursor size={32} color="#fff" />
+                </div>)}
+
+            </Button>
+        );
+    }
+
+    else if (buttonType === "Pen") {
+        return (
+            <Button
+                disableRipple
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={handleClick}
+                style={{
+                    maxWidth: '48px',
+                    maxHeight: '48px',
+                    minWidth: '48px',
+                    minHeight: '48px',
+                    backgroundColor: openButton === buttonType ? '#486cf0' : 'transparent'
+                }}            >
+
+                {openButton === buttonType && (<div className="box-content h-8 w-8 p-2 hover:bg-[#2f479e]"><Pen size={32} color="#fff" />
+                </div>)}
+
+                {!(openButton === buttonType) && (<div className="box-content h-8 w-8 p-2 hover:bg-black"><Pen size={32} color="#fff" />
+                </div>)}
+
+            </Button>
         );
     }
 
