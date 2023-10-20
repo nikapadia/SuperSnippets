@@ -60,5 +60,9 @@
 }
 
 .document-title:focus {
-    outline: none;
+    outline: 2px double rgb(78, 78, 78);
+}
+
+.document-title:hover:not(:focus) {
+    outline: 2px double rgba(78, 78, 78, 0.25);
 }
