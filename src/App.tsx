@@ -9,11 +9,13 @@ import './app.css';
 function App() {
     return (
         <div>
-            <Toolbar />
+            {/* <Toolbar /> */}
             <div className='editor'>
-                <PropertiesPanel />
-                <Canvas />
-                <ElementsPanel />
+                <div className='canvas'>
+                    <Canvas />
+                </div>
+                {/* <ElementsPanel /> */}
+                {/* <PropertiesPanel /> */}
             </div>
         </div>
     );
