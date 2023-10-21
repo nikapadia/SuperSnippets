@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './toolbar.css';
 import DropdownMenu from './Hooks';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -39,6 +39,22 @@ function Toolbar() {
 
   const [openButton, setOpenButton] = React.useState("Cursor");
 
+  const [value, setValue] = useState("");
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    localStorage.setItem("documentTitle", e.target.value);
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("documentTitle"))
+      setValue(localStorage.getItem("documentTitle"));
+    else
+      setValue("Untitled Document");
+  }, []);
+
+
+
   return (
     <>
       <div className="toolbar flex justify-between flex-row absolute box-border bg-core-grey z-10 inset-0 h-12 w-full">
@@ -59,7 +75,16 @@ function Toolbar() {
 
 
         </div>
-        <div className="flex justify-center items-center h-full basis-2/5">Untitled Document</div>
+
+
+        <div className="flex justify-center items-center h-full basis-2/5">
+          <input
+            value={value}
+            onChange={handleChange}
+            className="document-title"
+          />
+        </div>
+
         <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
           <button className="flex justify-center border-0 p-2 rounded bg-blue-500 hover:rounded-lg"> Export </button>
           <button className="flex justify-center border-0 p-2 rounded bg-green-400 hover:rounded-lg"> Share </button>
