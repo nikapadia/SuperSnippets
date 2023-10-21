@@ -43,12 +43,12 @@ function Toolbar() {
 
   const handleChange = (e) => {
     setValue(e.target.value);
-    localStorage.setItem("inputValue", e.target.value);
+    localStorage.setItem("documentTitle", e.target.value);
   };
 
   useEffect(() => {
-    if (localStorage.getItem("inputValue"))
-      setValue(localStorage.getItem("inputValue"));
+    if (localStorage.getItem("documentTitle"))
+      setValue(localStorage.getItem("documentTitle"));
     else
       setValue("Untitled Document");
   }, []);
