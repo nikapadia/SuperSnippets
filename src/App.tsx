@@ -9,7 +9,7 @@ import './app.css';
 function App() {
     return (
         <div>
-            {/* <Toolbar /> */}
+            <Toolbar />
             <div className='editor'>
                 <div className='canvas'>
                     <Canvas />

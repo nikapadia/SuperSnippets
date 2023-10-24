@@ -20,6 +20,9 @@ function createElement(id: string, type: string, x1: number, y1: number, x2: num
             element = new Konva.Line({
                 points: [x1, y1, x2, y2],
                 id: id,
+                stroke: "black",
+                strokeWidth: 1,
+                draggable: true,
             });
             break;
         case "circle":
@@ -34,11 +37,12 @@ function createElement(id: string, type: string, x1: number, y1: number, x2: num
             throw new Error("Unknow type");
     }
     return {
-        id, element, type, x1, y1, x2, y2
+        id, type, element, x1, y1
     };
 }
 
-const createRectangle = (id, x1, y1, x2, y2) => {
+// Ignore this for now.
+/* const createRectangle = (id, x1, y1, x2, y2) => {
 	const shapeRef = useRef();
 	const transformerRef = useRef<Konva.Transformer>();
 
@@ -133,7 +137,7 @@ const createRectangle = (id, x1, y1, x2, y2) => {
 	// 		)}
 	// 	</Fragment>
 	
-};
+}; */
 
 // const initialShapes = [
 // 	{
@@ -164,7 +168,7 @@ const Canvas = () => {
     const [action, setAction] = useState("none");
     const [tool, setTool] = useState("selection");
     const layerRef = useRef<Konva.Layer>();
-    const stageRef = useRef<Konva.Stage>();
+    // const stageRef = useRef<Konva.Stage>();
     const transformerRef = useRef<Konva.Transformer>();
     const transformer = new Konva.Transformer();
     layerRef.current?.add(transformer);
@@ -216,8 +220,10 @@ const Canvas = () => {
 
     useEffect(() => {
         if (selectedElement) {
-            transformerRef.current.nodes([selectedElement]);
+            transformerRef.current.nodes([selectedElement.element]);
             transformerRef.current.getLayer().batchDraw();
+        } else {
+            console.log("no selected element");
         }
     }, [selectedElement]);
 
@@ -227,12 +233,18 @@ const Canvas = () => {
         const clientY = pos.y;
         if (tool === "selection") {
             // deselect when clicked on empty area
+            let clickedElement: Konva.Shape;
             const clickedOnEmpty = e.target === e.target.getStage();
             if (clickedOnEmpty) {
                 selectElement(null);
             } else {
-                const clickedElement = e.target;
-                selectElement(clickedElement);
+                clickedElement = e.target;
+                // find clickedElement in elements
+                const index = elements.findIndex(e => e.element === clickedElement); 
+                if (index === -1) return;
+                let offsetX = clientX - elements[index].x1;
+                let offsetY = clientY - elements[index].y1;
+                selectElement({...elements[index], offsetX, offsetY});
                 setAction("moving");
             }
         } else if (tool === "rectangle") {
@@ -242,7 +254,15 @@ const Canvas = () => {
             setDrawingElement(element);
             layerRef.current?.add(element.element).batchDraw();
             transformer.nodes([element.element]);
-        } else {
+        } else if (tool === "line") {
+            let element = createElement(elements.length.toString(), "line", clientX, clientY, clientX, clientY);
+            setElements([...elements, element]);
+            setAction("drawing");
+            setDrawingElement(element);
+            layerRef.current?.add(element.element).batchDraw();
+            transformer.nodes([element.element]);
+        }
+        else {
             console.log("tool not implemented");
             return;
         }
@@ -251,33 +271,32 @@ const Canvas = () => {
     const handleMouseUp = (e: any) => {
         setAction("none");
         setTool("selection");
+        // selectElement(drawingElement);
+        setDrawingElement(null);
     }
 
     const handleMouseMove = (e: any) => {
+        let pos = e.target.getStage().getPointerPosition();
+        let clientY = pos.y;
+        let clientX = pos.x;
         if (action === "drawing") {
-            const pos = e.target.getStage().getPointerPosition();
             if (tool === "rectangle") {
                 const newWidth = pos.x - drawingElement.x1;
                 const newHeight = pos.y - drawingElement.y1;
-                console.log(drawingElement, newWidth, newHeight);
                 drawingElement.element.width(newWidth).height(newHeight);
+            } else if (tool === "line") {
+                drawingElement.element.points([drawingElement.x1, drawingElement.y1, clientX, clientY]);
             }
             layerRef.current?.batchDraw();
         } else if (action === "moving") {
-            const pos = e.target.getStage().getPointerPosition();
-            const clientX = pos.x;
-            const clientY = pos.y;
-            const dx = clientX - drawingElement.x1;
-            const dy = clientY - drawingElement.y1;
-            drawingElement.element.x(drawingElement.x1 + dx).y(drawingElement.y1 + dy);
-            // get the id of the element
-            const index = elements.findIndex(e => e.id === drawingElement.id);
-            // update the element's position
-            // elements[index].x1 += dx;
-            // elements[index].y1 += dy;
-            // elements[index].x2 += dx;
-            // elements[index].y2 += dy;
-            setElements([...elements]);
+            const dx = clientX - selectedElement.offsetX - selectedElement.element.x();
+            const dy = clientY - selectedElement.offsetY - selectedElement.element.y();
+            selectedElement.element.move(dx, dy);
+            selectedElement.x1 = selectedElement.element.x();
+            selectedElement.y1 = selectedElement.element.y();
+
+            // update the element in elements
+            updateElement(selectedElement);
             layerRef.current?.batchDraw();
         }
     }
@@ -302,16 +321,7 @@ const Canvas = () => {
 				onTouchMove={handleMouseMove}
 			>
 				<Layer ref={layerRef}>
-                    <Transformer
-                        ref={transformerRef}
-                        boundBoxFunc={(oldBox, newBox) => {
-                            // limit resize
-                            if (newBox.width < 5 || newBox.height < 5) {
-                                return oldBox;
-                            }
-                            return newBox;
-                        }}
-                    />
+                    <Transformer ref={transformerRef}/>
 				</Layer>
 			</Stage>
 		</div>
