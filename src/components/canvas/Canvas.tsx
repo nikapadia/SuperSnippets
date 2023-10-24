@@ -233,8 +233,8 @@ const Canvas = () => {
             } else {
                 const clickedElement = e.target;
                 selectElement(clickedElement);
+                setAction("moving");
             }
-            setAction("moving");
         } else if (tool === "rectangle") {
             let element = createElement(elements.length.toString(), "rectangle", clientX, clientY, clientX, clientY);
             setElements([...elements, element]);
@@ -254,8 +254,6 @@ const Canvas = () => {
     }
 
     const handleMouseMove = (e: any) => {
-        if (action !== "drawing") return;
-
         if (action === "drawing") {
             const pos = e.target.getStage().getPointerPosition();
             if (tool === "rectangle") {
@@ -272,6 +270,14 @@ const Canvas = () => {
             const dx = clientX - drawingElement.x1;
             const dy = clientY - drawingElement.y1;
             drawingElement.element.x(drawingElement.x1 + dx).y(drawingElement.y1 + dy);
+            // get the id of the element
+            const index = elements.findIndex(e => e.id === drawingElement.id);
+            // update the element's position
+            // elements[index].x1 += dx;
+            // elements[index].y1 += dy;
+            // elements[index].x2 += dx;
+            // elements[index].y2 += dy;
+            setElements([...elements]);
             layerRef.current?.batchDraw();
         }
     }
