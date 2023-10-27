@@ -19,11 +19,11 @@ const theme = createTheme({
             color: 'white',
           },
           '&.Mui-selected': {
-            backgroundColor: '#4f4fff',
+            backgroundColor: '#486cf0',
             color: 'white',
           },
           '&.Mui-selected:hover': {
-            backgroundColor: '#4f4fff',
+            backgroundColor: '#486cf0',
             color: 'white',
           },
         },
