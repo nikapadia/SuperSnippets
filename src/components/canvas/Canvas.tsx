@@ -13,7 +13,7 @@ function createElement(id: string, type: string, x1: number, y1: number, x2: num
                 height: 0,
                 id: id,
                 fill: "red",
-                draggable: true,
+                draggable: false,
             });
             break;
         case "line":
@@ -21,20 +21,37 @@ function createElement(id: string, type: string, x1: number, y1: number, x2: num
                 points: [x1, y1, x2, y2],
                 id: id,
                 stroke: "black",
-                strokeWidth: 1,
+                strokeWidth: 10,
                 draggable: true,
             });
             break;
-        case "circle":
-            element = new Konva.Circle({
-                x: x1,
-                y: y1,
-                radius: Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2),
+        case "arrow":
+            element = new Konva.Line({
                 id: id,
+                points: [x1, y1, x2, y2],
+                pointerLength: 20,
+                pointerWidth: 20,
+                fill: "black",
+                stroke: "black",
+                strokeWidth: 4,
+                draggable: true,
             });
             break;
+        case "text":
+            element = new Konva.Text({
+                x: x1,
+                y: y1,
+                text: "Text",
+                id: id,
+                fontSize: 20,
+                fontFamily: "Calibri",
+                draggable: true,
+                fill: "black",
+            })
+            break;
         default:
-            throw new Error("Unknow type");
+            console.log("Unknown type");
+            return;
     }
     return {
         id, type, element, x1, y1
@@ -197,6 +214,9 @@ const Canvas = () => {
                 case "5":
                     setTool("pen");
                     break;
+                case "6":
+                    setTool("arrow");
+                    break;
                 case "z":
                     if (event.metaKey || event.ctrlKey) {
                         // undo();
@@ -205,6 +225,27 @@ const Canvas = () => {
                 case "Z":
                     if (event.metaKey || event.ctrlKey && event.shiftKey) {
                         // redo();
+                    }
+                    break;
+                // The below cases are for testing purposes
+                case "8":
+                    if (selectedElement && selectedElement.type === "line") {
+                        selectedElement.element.strokeWidth(selectedElement.element.strokeWidth() + 1);
+                        layerRef.current?.batchDraw();
+                    }
+                    break;
+                case "9":
+                    if (selectedElement) {
+                        console.log("delete")
+                        const index = elements.findIndex(e => e.element === selectedElement.element);
+                        if (index === -1) return;
+                        selectedElement.element.remove();
+                        elements.splice(index, 1);
+                        setElements([...elements]);
+                        selectElement(null);
+                        layerRef.current?.batchDraw();
+                        transformer.nodes([]);
+                        transformerRef.current.getLayer().batchDraw();
                     }
                     break;
                 default:
@@ -245,34 +286,27 @@ const Canvas = () => {
                 let offsetX = clientX - elements[index].x1;
                 let offsetY = clientY - elements[index].y1;
                 selectElement({...elements[index], offsetX, offsetY});
+                selectedElement.element.draggable(true);
                 setAction("moving");
             }
-        } else if (tool === "rectangle") {
-            let element = createElement(elements.length.toString(), "rectangle", clientX, clientY, clientX, clientY);
+        } else {
+            let element = createElement(elements.length.toString(), tool, clientX, clientY, clientX, clientY);
             setElements([...elements, element]);
             setAction("drawing");
             setDrawingElement(element);
             layerRef.current?.add(element.element).batchDraw();
             transformer.nodes([element.element]);
-        } else if (tool === "line") {
-            let element = createElement(elements.length.toString(), "line", clientX, clientY, clientX, clientY);
-            setElements([...elements, element]);
-            setAction("drawing");
-            setDrawingElement(element);
-            layerRef.current?.add(element.element).batchDraw();
-            transformer.nodes([element.element]);
-        }
-        else {
-            console.log("tool not implemented");
-            return;
-        }
+        } 
 	};
 
     const handleMouseUp = (e: any) => {
+        if (action === "drawing") {
+            selectElement(drawingElement);
+        }
         setAction("none");
         setTool("selection");
-        // selectElement(drawingElement);
         setDrawingElement(null);
+        layerRef.current?.batchDraw();
     }
 
     const handleMouseMove = (e: any) => {
@@ -289,8 +323,12 @@ const Canvas = () => {
             }
             layerRef.current?.batchDraw();
         } else if (action === "moving") {
-            const dx = clientX - selectedElement.offsetX - selectedElement.element.x();
-            const dy = clientY - selectedElement.offsetY - selectedElement.element.y();
+            if (selectedElement.type === "line") {
+                selectedElement.x1 = selectedElement.element.x();
+                selectedElement.y1 = selectedElement.element.y();
+            }
+            let dx = clientX - selectedElement.offsetX - selectedElement.element.x();
+            let dy = clientY - selectedElement.offsetY - selectedElement.element.y();
             selectedElement.element.move(dx, dy);
             selectedElement.x1 = selectedElement.element.x();
             selectedElement.y1 = selectedElement.element.y();
@@ -321,7 +359,15 @@ const Canvas = () => {
 				onTouchMove={handleMouseMove}
 			>
 				<Layer ref={layerRef}>
-                    <Transformer ref={transformerRef}/>
+                    <Transformer ref={transformerRef} 
+                        boundBoxFunc={(oldBox, newBox) => {
+                            // limit resize
+                            if (newBox.width < 5 || newBox.height < 5) {
+                                return oldBox;
+                            }
+                            return newBox;
+                        }}
+                    />
 				</Layer>
 			</Stage>
 		</div>
