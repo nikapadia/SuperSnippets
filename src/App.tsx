@@ -26,9 +26,11 @@ function App() {
             <ExportModal isOpen={isExportOpen} onClose={closeExport} />
             <Toolbar onExportClick={openExport} />
             <div className='editor'>
-                <PropertiesPanel />
-                <Canvas />
-                <ElementsPanel />
+                <div className='canvas'>
+                    <Canvas />
+                </div>
+                {/* <ElementsPanel /> */}
+                {/* <PropertiesPanel /> */}
             </div>
         </div>
     );

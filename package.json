@@ -11,11 +11,16 @@
   },
   "dependencies": {
     "@nanostores/react": "^0.7.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.13",
+    "@mui/material": "^5.14.12",
     "@phosphor-icons/react": "^2.0.13",
-    "nanostores": "^0.9.4",
+    "konva": "^9.2.2",
     "perfect-freehand": "^1.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-konva": "^18.2.10",
     "roughjs": "^4.6.4"
   },
   "devDependencies": {
