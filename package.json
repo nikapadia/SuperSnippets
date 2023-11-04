@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.14.13",
     "@mui/material": "^5.14.12",
     "@phosphor-icons/react": "^2.0.13",
+    "highlight.js": "latest",
     "konva": "^9.2.2",
     "perfect-freehand": "^1.2.0",
     "react": "^18.2.0",
