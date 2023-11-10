@@ -58,7 +58,7 @@ function createElement(
 			});
 			break;
 		case "codeblock":
-			return createCodeBlock(id, x1, y1);
+			return createCodeBlock();
 		default:
 			console.log("Unknown type");
 			return;
@@ -72,7 +72,7 @@ function createElement(
 	};
 }
 
-function createCodeBlock(id: string, x1: number, y1: number) {
+function oldcreateCodeBlock(id: string, x1: number, y1: number) {
 	// let element: Konva.Shape = new Konva.Rect({
 	// 	x: x1,
 	// 	y: y1,
@@ -132,33 +132,33 @@ function createCodeBlock(id: string, x1: number, y1: number) {
     
       // Make the text editable on double click
       text.on('dblclick', () => {
-        // Create a textarea over the text
-        const textarea = document.createElement('textarea');
-        document.body.appendChild(textarea);
+        // Create a textArea over the text
+        const textArea = document.createElement('textArea') as HTMLTextAreaElement;
+        document.body.appendChild(textArea);
     
-        // Style the textarea
-        textarea.value = text.text();
-        textarea.style.position = 'absolute';
-        textarea.style.top = `${text.absolutePosition().y}px`;
-        textarea.style.left = `${text.absolutePosition().x}px`;
-        textarea.style.width = `${text.width() - text.padding() * 2}px`;
-        textarea.style.height = `${text.height() - text.padding() * 2}px`;
-        textarea.style.fontSize = `${text.fontSize()}px`;
-        textarea.style.border = 'none';
-        textarea.style.padding = '0px';
-        textarea.style.margin = '0px';
-        textarea.style.overflow = 'hidden';
-        textarea.style.background = 'none';
-        textarea.style.outline = 'none';
-        textarea.style.resize = 'none';
+        // Style the textArea
+        textArea.value = text.text();
+        textArea.style.position = 'absolute';
+        textArea.style.top = `${text.absolutePosition().y}px`;
+        textArea.style.left = `${text.absolutePosition().x}px`;
+        textArea.style.width = `${text.width() - text.padding() * 2}px`;
+        textArea.style.height = `${text.height() - text.padding() * 2}px`;
+        textArea.style.fontSize = `${text.fontSize()}px`;
+        textArea.style.border = 'none';
+        textArea.style.padding = '0px';
+        textArea.style.margin = '0px';
+        textArea.style.overflow = 'hidden';
+        textArea.style.background = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.resize = 'none';
     
-        textarea.focus();
+        textArea.focus();
     
-        // When the textarea loses focus, remove it and update the text
-        // textarea.addEventListener('blur', () => {
-        //   text.text(hljs.highlightAuto(textarea.value).value);
+        // When the textArea loses focus, remove it and update the text
+        // textArea.addEventListener('blur', () => {
+        //   text.text(hljs.highlightAuto(textArea.value).value);
         //   layerRef.current.batchDraw();
-        //   document.body.removeChild(textarea);
+        //   document.body.removeChild(textArea);
         // });
       });
     
@@ -168,6 +168,149 @@ function createCodeBlock(id: string, x1: number, y1: number) {
         element: text,
         x1,
         y1,
+    };
+}
+
+function createCodeBlock() {
+    let codeBlockGroup = new Konva.Group();
+    let box = new Konva.Rect({
+        x: 320,
+        y: 180,
+        width: 640,
+        height: 360,
+        fill: '#22272e',
+        strokeWidth: 4,
+        cornerRadius: [25, 25, 20, 20],
+    });
+    codeBlockGroup.add(box);
+    box = new Konva.Rect({
+        x: 320,
+        y: 180,
+        width: 640,
+        height: 76,
+        fill: '#2f343a',
+        strokeWidth: 4,
+        cornerRadius: [20, 20, 0, 0],
+    });
+    codeBlockGroup.add(box);
+    let circle = new Konva.Circle({
+        x: 320 + 33,
+        y: 180 + 38,
+        radius: 10,
+        fill: '#ff5f56',
+        strokeWidth: 4,
+    });
+    codeBlockGroup.add(circle);
+    circle = new Konva.Circle({
+        x: 320 + 66,
+        y: 180 + 38,
+        radius: 10,
+        fill: '#ffbd2e',
+        strokeWidth: 4,
+    });
+    codeBlockGroup.add(circle);
+    circle = new Konva.Circle({
+        x: 320 + 96,
+        y: 180 + 38,
+        radius: 10,
+        fill: '#27c93f',
+        strokeWidth: 4,
+    });
+    codeBlockGroup.add(circle);
+    /* box = new Konva.Rect({
+        x: 320 + 96 + 33,
+        y: 180 + 10,
+        width: 144,
+        height: 66,
+        fill: 'red',
+        strokeWidth: 4,
+        cornerRadius: [10, 10, 0, 0],
+    });
+    codeBlockGroup.add(box);
+    let text = new Konva.Text({
+        x: 320 + 149,
+        y: 180 + 30,
+        text: 'main.py',
+        fontSize: 20,
+        draggable: false,
+        fill: 'white',
+    }); */
+    let text = new Konva.Text({
+        x: 350,
+        y: 280,
+        text: '// put your code here',
+        fontSize: 20,
+        draggable: false,
+        fill: 'gray',
+    });
+    codeBlockGroup.add(text);
+
+    text.on('dblclick', () => {
+        text.hide();
+        let textPosition = text.absolutePosition();
+
+        let areaPosition = {
+            x: textPosition.x,
+            y: textPosition.y,
+        }
+        let textArea = document.createElement('textArea') as HTMLTextAreaElement;
+        document.body.appendChild(textArea);
+
+        textArea.value = text.text();
+        textArea.style.position = 'absolute';
+        textArea.style.top = areaPosition.y + 'px';
+        textArea.style.left = areaPosition.x + 'px';
+        textArea.style.width = text.width() - text.padding() * 2 + 'px';
+        textArea.style.height =
+        text.height() - text.padding() * 2 + 5 + 'px';
+        textArea.style.fontSize = text.fontSize() + 'px';
+        textArea.style.border = 'none';
+        textArea.style.padding = '0px';
+        textArea.style.margin = '0px';
+        textArea.style.overflow = 'hidden';
+        textArea.style.background = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.resize = 'none';
+        textArea.style.lineHeight = text.lineHeight().toFixed();
+        textArea.style.fontFamily = text.fontFamily();
+        textArea.style.transformOrigin = 'left top';
+        textArea.style.textAlign = text.align();
+        textArea.style.color = text.fill();
+        let rotation = text.rotation();
+        var transform = '';
+        if (rotation) {
+          transform += 'rotateZ(' + rotation + 'deg)';
+        }
+
+        var px = 0;
+		var isFirefox =
+			navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+		if (isFirefox) {
+			px += 2 + Math.round(text.fontSize() / 20);
+		}
+		transform += "translateY(-" + px + "px)";
+
+		textArea.style.transform = transform;
+
+		// reset height
+		textArea.style.height = "auto";
+		// after browsers resized it we can set actual value
+		textArea.style.height = textArea.scrollHeight + 3 + "px";
+
+        textArea.focus();
+        
+        function removeTextArea() {
+            textArea.parentNode.removeChild(textArea);
+            text.show();
+        }
+    });
+
+    return {
+        id: '0',
+        type: 'codeblock',
+        element: codeBlockGroup,
+        x1: 320,
+        y1: 180,
     };
 }
 
@@ -183,6 +326,15 @@ const Canvas = () => {
 	const transformerRef = useRef<Konva.Transformer>();
 	const transformer = new Konva.Transformer();
 	layerRef.current?.add(transformer);
+
+    // draw a box with half the dimensions as the stage whenever the page 
+    useEffect(() => {
+        let element = createCodeBlock();
+        transformer.nodes([element.element]);
+        setElements([...elements, element]);
+        layerRef.current?.add(element.element).batchDraw();
+    }, []);
+    
 
 	// Handle keyboard shortcuts
 	useEffect(() => {
