@@ -257,18 +257,17 @@ function createCodeBlock() {
         document.body.appendChild(textArea);
 
         textArea.value = text.text();
-        textArea.style.position = 'absolute';
-        textArea.style.top = areaPosition.y + 'px';
-        textArea.style.left = areaPosition.x + 'px';
+        // textArea.style.position = 'absolute';
+        // textArea.style.top = areaPosition.y + 'px';
+        // textArea.style.left = areaPosition.x + 'px';
         textArea.style.width = text.width() - text.padding() * 2 + 'px';
-        textArea.style.height =
-        text.height() - text.padding() * 2 + 5 + 'px';
+        textArea.style.height = '1000px';
         textArea.style.fontSize = text.fontSize() + 'px';
         textArea.style.border = 'none';
         textArea.style.padding = '0px';
         textArea.style.margin = '0px';
-        textArea.style.overflow = 'hidden';
-        textArea.style.background = 'none';
+        // textArea.style.overflow = 
+        textArea.style.background = 'black';
         textArea.style.outline = 'none';
         textArea.style.resize = 'none';
         textArea.style.lineHeight = text.lineHeight().toFixed();
@@ -304,7 +303,7 @@ function createCodeBlock() {
             text.show();
         }
     });
-
+    codeBlockGroup.draggable(true);
     return {
         id: '0',
         type: 'codeblock',
