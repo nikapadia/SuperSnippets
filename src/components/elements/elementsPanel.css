@@ -1,8 +1,0 @@
-.restrict-height {
-    height: calc(100% - 48px);
-    overflow-y: auto;
-}
-
-.panel-elements {
-    border-right: 1px solid #353535;
-}
