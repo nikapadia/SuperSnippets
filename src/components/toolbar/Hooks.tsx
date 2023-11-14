@@ -8,6 +8,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import MenuList from '@mui/material/MenuList';
 import { CodeBlock, TextT, Cursor, Pen, Square, LineSegment, ArrowUpRight, Circle, Shapes, Star, FileImage } from "@phosphor-icons/react";
+import { useContext } from 'react';
+import { ToolContext } from "../../contexts/ToolContext";
+
 
 interface DropdownMenuProps {
     buttonType?: string;
@@ -15,6 +18,8 @@ interface DropdownMenuProps {
 
 
 export default function DropdownMenu({ buttonType, openButton, setOpenButton }) {
+
+    const { tool, setTool } = useContext(ToolContext);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -274,7 +279,10 @@ export default function DropdownMenu({ buttonType, openButton, setOpenButton }) 
                 disableRipple
                 aria-controls="simple-menu"
                 aria-haspopup="true"
-                onClick={handleClick}
+                onClick={(event) => {
+                    setTool("rectangle");
+                    handleClick(event);
+                }}
                 style={{
                     maxWidth: '48px',
                     maxHeight: '48px',

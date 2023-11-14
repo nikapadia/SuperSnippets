@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const ToolContext = React.createContext({
+export const ToolContext = React.createContext({
     tool: 'selection',
-    setTool: (tool: string) => { },
+    setTool: (tool: string) => {},
 });
 
-export default ToolContext;
+export const ToolProvider = ({ children }) => {
+    const [tool, setTool] = useState('selection');
+
+    return (
+        <ToolContext.Provider value={{ tool, setTool }}>
+            {children}
+        </ToolContext.Provider>
+    );
+};
