@@ -2,6 +2,8 @@ import { useRef, useEffect, useState } from "react";
 import { Stage, Layer, Transformer } from "react-konva";
 import Konva from "konva";
 
+import { ToolContext } from "../../contexts/ToolContext";
+
 function createElement(id: string, type: string, x1: number, y1: number, x2: number, y2: number) {
     let element: Konva.Shape;
     switch (type) {
