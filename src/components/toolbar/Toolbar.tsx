@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './toolbar.css';
 import DropdownMenu from './Hooks';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ExportModal from '../exportmodal/ExportModal';
 import { Select } from '@mui/material';
 
-
+interface ToolbarProps {
+  layerRef: React.MutableRefObject<any>;
+}
 
 
 const theme = createTheme({
@@ -35,7 +38,7 @@ const theme = createTheme({
 
 
 
-function Toolbar() {
+function Toolbar({ layerRef }: ToolbarProps) {
 
   const [openButton, setOpenButton] = React.useState("Cursor");
 
@@ -53,7 +56,16 @@ function Toolbar() {
       setValue("Untitled Document");
   }, []);
 
+  //Export Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -86,13 +98,15 @@ function Toolbar() {
         </div>
 
         <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
-          <button className="flex justify-center border-0 p-2 rounded bg-blue-500 hover:rounded-lg"> Export </button>
+          <button className="flex justify-center border-0 p-2 rounded bg-blue-500 hover:rounded-lg" onClick={handleOpenModal}> Export </button>
           <button className="flex justify-center border-0 p-2 rounded bg-green-400 hover:rounded-lg"> Share </button>
           <div className="flex items-center h-8 p-2 border-o text-center hover:bg-black box-content">
             <div>100%</div>
           </div>
         </div>
+        <ExportModal isOpen={isModalOpen} onClose={handleCloseModal} layerRef={layerRef}/>
       </div>
+      
     </>
   );
 }

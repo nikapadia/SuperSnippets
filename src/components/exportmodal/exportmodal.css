@@ -1,0 +1,63 @@
+.export-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  width: 70%;
+  height: 70%;
+  padding: 240px;
+  border-radius: 20px;
+}
+
+.canvas-content {
+  background-color: #FFF; /* replace with your desired color */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 20px;
+  padding: 10px; /* adjust as needed */
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 16px;
+  color: #FFF;
+  cursor: pointer;
+}
+
+.export-button {
+  position: absolute;
+bottom: 20px;
+right: 20px;
+background-color: #000000; /* change to your preferred color */
+border: none;
+color: white;
+padding: 7.5px 16px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 12px;
+transition-duration: 0.4s;
+cursor: pointer;
+border-radius: 4px; /* adjust for less rounded corners */
+}
+
+.export-button:hover {
+  background-color: #000000; /* change to your preferred color */
+  color: white;
+}

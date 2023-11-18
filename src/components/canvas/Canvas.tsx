@@ -58,14 +58,17 @@ function createElement(id: string, type: string, x1: number, y1: number, x2: num
     };
 }
 
+interface CanvasProps {
+    layerRef: React.MutableRefObject<any>;
+  }
 
-const Canvas = () => {
+const Canvas: React.FC<CanvasProps>  = ({ layerRef }) => {
 	const [elements, setElements] = useState([]);
 	const [selectedElement, selectElement] = useState(null);
     const [drawingElement, setDrawingElement] = useState(null);
     const [action, setAction] = useState("none");
     const [tool, setTool] = useState("selection");
-    const layerRef = useRef<Konva.Layer>();
+    //const layerRef = useRef<Konva.Layer>();
     // const stageRef = useRef<Konva.Stage>();
     const transformerRef = useRef<Konva.Transformer>();
     const transformer = new Konva.Transformer();
