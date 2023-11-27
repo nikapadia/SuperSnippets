@@ -58,7 +58,8 @@ function createElement(
 			});
 			break;
 		case "codeblock":
-			return createCodeBlock();
+			// return createCodeBlock();
+            break;
 		default:
 			console.log("Unknown type");
 			return;
@@ -171,151 +172,8 @@ function oldcreateCodeBlock(id: string, x1: number, y1: number) {
     };
 }
 
-function createCodeBlock() {
-    let codeBlockGroup = new Konva.Group();
-    let box = new Konva.Rect({
-        x: 320,
-        y: 180,
-        width: 640,
-        height: 360,
-        fill: '#22272e',
-        strokeWidth: 4,
-        cornerRadius: [25, 25, 20, 20],
-    });
-    codeBlockGroup.add(box);
-    box = new Konva.Rect({
-        x: 320,
-        y: 180,
-        width: 640,
-        height: 76,
-        fill: '#2f343a',
-        strokeWidth: 4,
-        cornerRadius: [20, 20, 0, 0],
-    });
-    codeBlockGroup.add(box);
-    let circle = new Konva.Circle({
-        x: 320 + 33,
-        y: 180 + 38,
-        radius: 10,
-        fill: '#ff5f56',
-        strokeWidth: 4,
-    });
-    codeBlockGroup.add(circle);
-    circle = new Konva.Circle({
-        x: 320 + 66,
-        y: 180 + 38,
-        radius: 10,
-        fill: '#ffbd2e',
-        strokeWidth: 4,
-    });
-    codeBlockGroup.add(circle);
-    circle = new Konva.Circle({
-        x: 320 + 96,
-        y: 180 + 38,
-        radius: 10,
-        fill: '#27c93f',
-        strokeWidth: 4,
-    });
-    codeBlockGroup.add(circle);
-    /* box = new Konva.Rect({
-        x: 320 + 96 + 33,
-        y: 180 + 10,
-        width: 144,
-        height: 66,
-        fill: 'red',
-        strokeWidth: 4,
-        cornerRadius: [10, 10, 0, 0],
-    });
-    codeBlockGroup.add(box);
-    let text = new Konva.Text({
-        x: 320 + 149,
-        y: 180 + 30,
-        text: 'main.py',
-        fontSize: 20,
-        draggable: false,
-        fill: 'white',
-    }); */
-    let text = new Konva.Text({
-        x: 350,
-        y: 280,
-        text: '// put your code here',
-        fontSize: 20,
-        draggable: false,
-        fill: 'gray',
-    });
-    codeBlockGroup.add(text);
-
-    text.on('dblclick', () => {
-        text.hide();
-        let textPosition = text.absolutePosition();
-
-        let areaPosition = {
-            x: textPosition.x,
-            y: textPosition.y,
-        }
-        let textArea = document.createElement('textArea') as HTMLTextAreaElement;
-        document.body.appendChild(textArea);
-
-        textArea.value = text.text();
-        // textArea.style.position = 'absolute';
-        // textArea.style.top = areaPosition.y + 'px';
-        // textArea.style.left = areaPosition.x + 'px';
-        textArea.style.width = text.width() - text.padding() * 2 + 'px';
-        textArea.style.height = '1000px';
-        textArea.style.fontSize = text.fontSize() + 'px';
-        textArea.style.border = 'none';
-        textArea.style.padding = '0px';
-        textArea.style.margin = '0px';
-        // textArea.style.overflow = 
-        textArea.style.background = 'black';
-        textArea.style.outline = 'none';
-        textArea.style.resize = 'none';
-        textArea.style.lineHeight = text.lineHeight().toFixed();
-        textArea.style.fontFamily = text.fontFamily();
-        textArea.style.transformOrigin = 'left top';
-        textArea.style.textAlign = text.align();
-        textArea.style.color = text.fill();
-        let rotation = text.rotation();
-        var transform = '';
-        if (rotation) {
-          transform += 'rotateZ(' + rotation + 'deg)';
-        }
-
-        var px = 0;
-		var isFirefox =
-			navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
-		if (isFirefox) {
-			px += 2 + Math.round(text.fontSize() / 20);
-		}
-		transform += "translateY(-" + px + "px)";
-
-		textArea.style.transform = transform;
-
-		// reset height
-		textArea.style.height = "auto";
-		// after browsers resized it we can set actual value
-		textArea.style.height = textArea.scrollHeight + 3 + "px";
-
-        textArea.focus();
-        
-        function removeTextArea() {
-            textArea.parentNode.removeChild(textArea);
-            text.show();
-        }
-    });
-    codeBlockGroup.draggable(true);
-    return {
-        id: '0',
-        type: 'codeblock',
-        element: codeBlockGroup,
-        x1: 320,
-        y1: 180,
-    };
-}
-
-
 const Canvas = () => {
-	const [elements, setElements] = useState([]);
+    const [elements, setElements] = useState([]);
 	const [selectedElement, selectElement] = useState(null);
 	const [drawingElement, setDrawingElement] = useState(null);
 	const [action, setAction] = useState("none");
@@ -459,6 +317,159 @@ const Canvas = () => {
 			transformer.nodes([element.element]);
 		}
 	};
+
+    function createCodeBlock() {
+        let codeBlockGroup = new Konva.Group();
+        let box = new Konva.Rect({
+            x: 320,
+            y: 180,
+            width: 640,
+            height: 360,
+            fill: '#22272e',
+            strokeWidth: 4,
+            cornerRadius: [25, 25, 20, 20],
+        });
+        codeBlockGroup.add(box);
+        box = new Konva.Rect({
+            x: 320,
+            y: 180,
+            width: 640,
+            height: 76,
+            fill: '#2f343a',
+            strokeWidth: 4,
+            cornerRadius: [20, 20, 0, 0],
+        });
+        codeBlockGroup.add(box);
+        let circle = new Konva.Circle({
+            x: 320 + 33,
+            y: 180 + 38,
+            radius: 10,
+            fill: '#ff5f56',
+            strokeWidth: 4,
+        });
+        codeBlockGroup.add(circle);
+        circle = new Konva.Circle({
+            x: 320 + 66,
+            y: 180 + 38,
+            radius: 10,
+            fill: '#ffbd2e',
+            strokeWidth: 4,
+        });
+        codeBlockGroup.add(circle);
+        circle = new Konva.Circle({
+            x: 320 + 96,
+            y: 180 + 38,
+            radius: 10,
+            fill: '#27c93f',
+            strokeWidth: 4,
+        });
+        codeBlockGroup.add(circle);
+        let text = new Konva.Text({
+            x: 350,
+            y: 280,
+            text: '// put your code here',
+            fontSize: 20,
+            draggable: false,
+            fill: 'gray',
+        });
+        codeBlockGroup.add(text);
+    
+        text.on('dblclick', () => {
+            text.hide();
+            setAction("editing");
+            let textPosition = text.absolutePosition();
+            console.log(textPosition);
+            let areaPosition = {
+                x: textPosition.x,
+                y: textPosition.y,
+            }
+            console.log(areaPosition)
+            let textArea = document.createElement('textArea') as HTMLTextAreaElement;
+            
+            document.body.appendChild(textArea);
+    
+            textArea.value = text.text();
+            textArea.style.position = 'absolute';
+            textArea.style.top = '400px';
+            textArea.style.left = '452px';
+            textArea.style.width = '575px';
+            textArea.style.height = '200px';
+            textArea.style.fontSize = text.fontSize() + 'px';
+            textArea.style.border = 'none';
+            textArea.style.padding = '0px';
+            textArea.style.margin = '0px';
+            // textArea.style.overflow = 
+            textArea.style.background = 'black';
+            textArea.style.outline = 'none';
+            textArea.style.resize = 'none';
+            textArea.style.lineHeight = text.lineHeight().toFixed();
+            textArea.style.fontFamily = text.fontFamily();
+            textArea.spellcheck = false;
+            // textArea.style.transformOrigin = 'left top';
+            textArea.style.textAlign = text.align();
+            textArea.style.color = text.fill();
+            let rotation = text.rotation();
+            var transform = '';
+            if (rotation) {
+              transform += 'rotateZ(' + rotation + 'deg)';
+            }
+    
+            var px = 0;
+            var isFirefox =
+            	navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+            if (isFirefox) {
+            	px += 2 + Math.round(text.fontSize() / 20);
+            }
+            transform += "translateY(-" + px + "px)";
+    
+            // textArea.style.transform = transform;
+    
+            // // reset height
+            // textArea.style.height = "auto";
+            // // after browsers resized it we can set actual value
+            // textArea.style.height = textArea.scrollHeight + 3 + "px";
+    
+            textArea.focus();
+
+            // when the esc key is pressed, remove the textarea
+            // and update the text on canvas
+            textArea.addEventListener('keydown', function (e) {
+                if (e.keyCode === 27) {
+                    let highlightedCode = hljs.highlightAuto(textArea.value).value;
+                    textArea.value = highlightedCode;
+                    // add a code element to the html page
+                    let codeElement = document.createElement('code');
+                    codeElement.innerHTML = highlightedCode;
+                    document.body.appendChild(codeElement);
+                    
+                    text.text(highlightedCode);
+                    removeTextArea();
+                }
+            });
+
+            // textArea.addEventListener('keydown', function (e) {
+            //     if (e.keyCode === 13) {
+            //         text.text(textArea.value);
+            //         removeTextArea();
+            //     }
+            // });
+
+                        
+            function removeTextArea() {
+                textArea.parentNode.removeChild(textArea);
+                text.show();
+            }
+        });
+        codeBlockGroup.draggable(true);
+        return {
+            id: '0',
+            type: 'codeblock',
+            element: codeBlockGroup,
+            x1: 320,
+            y1: 180,
+        };
+    }
+    
 
 	const handleMouseUp = (e: any) => {
 		if (action === "drawing") {
