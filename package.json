@@ -19,6 +19,7 @@
     "@phosphor-icons/react": "^2.0.13",
     "@uiw/react-codemirror": "^4.21.21",
     "highlight.js": "latest",
+    "html2canvas": "^1.4.1",
     "konva": "^9.2.2",
     "perfect-freehand": "^1.2.0",
     "react": "^18.2.0",

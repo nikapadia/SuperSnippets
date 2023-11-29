@@ -1,31 +1,27 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
-// import { javascript } from "@codemirror/lang-javascript";
+import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 // import "codemirror/keymap/sublime";
 // import "codemirror/theme/monokai.css";
 
 import "./codemodal.css";
 
-const CodeModal = ({ closeModal }) => {
-	const [text, setText] = React.useState("");
-    // setText("const a = 1;\nconst b = 2;\nconst c = a + b;\nconsole.log(c);");
+const CodeModal = ({ closeModal, initialText }) => {
+	const [text, setText] = useState("");
+    const codeMirrorRef = useRef(null);
 
-	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setText(event.target.value);
-	};
+    useEffect(() => {
+        setText(initialText);
+    }, [initialText]);
 
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(text);
 	};
 
 	const saveCode = () => {
-        const code = text;
-        console.log(code);
-        closeModal(code);
+        closeModal(text);
     };
-
-    let test = "print('Hello, world!')";
 
 	return (
 		<div>
@@ -35,18 +31,16 @@ const CodeModal = ({ closeModal }) => {
 						<h2>Edit codeblock</h2>
 					</div>
 					<div className="modal-body">
-						{/* <textarea
-							className="modal-textarea"
-							value={text}
-							readOnly={false}
-							onChange={handleChange}
-						></textarea> */}
                         <CodeMirror
-                            value={test}
+                            value={text}
                             onChange={(value) => { setText(value); }}
-                            extensions={[python()]}
+                            extensions={[javascript({jsx: true})]}
                             basicSetup={{autocompletion: true}}
                             theme="dark"
+                            ref={codeMirrorRef}
+                            className="code-mirror"
+                            height="100%"
+                            maxHeight="360px"
                         />
 					</div>
 					<div className="modal-footer">

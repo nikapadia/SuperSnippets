@@ -2,8 +2,8 @@ import { useRef, useEffect, useState } from "react";
 import { Stage, Layer, Transformer } from "react-konva";
 import Konva from "konva";
 import hljs from "highlight.js";
-
 import CodeModal from "./CodeModal";
+import html2canvas from "html2canvas";
 
 import "highlight.js/styles/atom-one-dark.css";
 
@@ -326,18 +326,20 @@ const Canvas = () => {
 			strokeWidth: 4,
 		});
 		codeBlockGroup.add(circle);
-		let text = new Konva.Text({
-			x: 350,
-			y: 280,
-			text: "// double click to edit code",
-			fontSize: 20,
-			draggable: false,
-			fill: "gray",
-		});
-		codeBlockGroup.add(text);
+        var imageObj = new Image();
+        imageObj.onload = function () {
+            var textBlockImage = new Konva.Image({
+                x: 325,
+                y: 255,
+                image: imageObj,
+                // width: 630,
+                // height: 270,
+            });
+            codeBlockGroup.add(textBlockImage);
+        };
+        imageObj.src = "https://konvajs.org/assets/yoda.jpg";
 
         codeBlockGroup.on("dblclick", () => {
-            console.log("double click");
             setModalVisible(true);
         });
 
@@ -351,16 +353,33 @@ const Canvas = () => {
 		};
 	}
 
-    const closeCodeModal = (modalCode = "") => {
+    const closeCodeModal = (modalCode: string) => {
         setModalVisible(false);
-        console.log(modalCode);
+        if (modalCode === "") return;
         setCode(modalCode);
-        console.log("code: " + code);
+        const highlightedCode = hljs.highlight(modalCode, { language: "javascript" }).value;
+        const offScreenDiv = document.createElement("div");
+        offScreenDiv.innerHTML = `<pre><code>${highlightedCode}</code></pre>`;
+        document.body.appendChild(offScreenDiv);
+
+        html2canvas(offScreenDiv, {backgroundColor: null, height: 360, width: 640, x: -10}).then((canvas) => {
+            let dataURL = canvas.toDataURL("image/png");
+            let img = new Image();
+            img.src = dataURL;
+            img.onload = () => {
+                let codeBlock = elements[0];
+                codeBlock.element.find("Image")[0].image(img);
+                layerRef.current?.batchDraw();
+            };
+        });
+        document.body.removeChild(offScreenDiv);
+        setAction("none");
+        setTool("selection");
     }
 
 	return (
 		<div style={{ backgroundColor: "#fff" }}>
-            {modalVisible && <CodeModal closeModal={closeCodeModal} />}
+            {modalVisible && <CodeModal closeModal={closeCodeModal} initialText={code} />}
             <div>
                 <Stage
                     width={1280}
