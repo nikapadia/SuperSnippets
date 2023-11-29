@@ -3,6 +3,8 @@ import { Stage, Layer, Transformer } from "react-konva";
 import Konva from "konva";
 import hljs from "highlight.js";
 
+import CodeModal from "./CodeModal";
+
 import "highlight.js/styles/atom-one-dark.css";
 
 import languageJavascript from "highlight.js/lib/languages/javascript";
@@ -77,107 +79,6 @@ function createElement(
 	};
 }
 
-function oldcreateCodeBlock(id: string, x1: number, y1: number) {
-	// let element: Konva.Shape = new Konva.Rect({
-	// 	x: x1,
-	// 	y: y1,
-	// 	width: 356,
-	// 	height: 256,
-	// 	id: id,
-	// 	fill: "red",
-	// 	draggable: false,
-	// 	sceneFunc: function (context, shape) {
-	// 		context.beginPath();
-	// 		// don't need to set position of rect, Konva will handle it
-	//         // make a rounded rect
-	//         const radius = 10;
-	//         const x = shape.getAttr("x");
-	//         const y = shape.getAttr("y");
-	//         const width = shape.getAttr("width");
-	//         const height = shape.getAttr("height");
-	//         context.moveTo(x + radius, y);
-	//         context.lineTo(x + width - radius, y);
-	//         context.quadraticCurveTo(x + width, y, x + width, y + radius);
-	//         context.lineTo(x + width, y + height - radius);
-	//         context.quadraticCurveTo(
-	//             x + width,
-	//             y + height,
-	//             x + width - radius,
-	//             y + height
-	//         );
-	//         context.lineTo(x + radius, y + height);
-	//         context.quadraticCurveTo(x, y + height, x, y + height - radius);
-	//         context.lineTo(x, y + radius);
-	//         context.quadraticCurveTo(x, y, x + radius, y);
-	//         context.closePath();
-	//         context.strokeStyle = "black";
-	//         context.lineWidth = 2;
-	//         context.stroke();
-
-	// 		// context.rect(0, 0, shape.getAttr("width"), shape.getAttr("height"));
-	// 		// (!) Konva specific method, it is very important
-	// 		// it will apply are required styles
-	// 		context.fillStrokeShape(shape);
-	// 	},
-	// });
-	// return {
-	// 	id,
-	// 	type: "codeblock",
-	// 	element,
-	// 	x1,
-	// 	y1,
-	// };
-	const text = new Konva.Text({
-		x: x1,
-		y: y1,
-		text: 'function helloWorld() {\n  console.log("Hello, world!");\n}',
-		fontSize: 18,
-		draggable: true,
-	});
-
-	// Make the text editable on double click
-	text.on("dblclick", () => {
-		// Create a textArea over the text
-		const textArea = document.createElement(
-			"textArea"
-		) as HTMLTextAreaElement;
-		document.body.appendChild(textArea);
-
-		// Style the textArea
-		textArea.value = text.text();
-		textArea.style.position = "absolute";
-		textArea.style.top = `${text.absolutePosition().y}px`;
-		textArea.style.left = `${text.absolutePosition().x}px`;
-		textArea.style.width = `${text.width() - text.padding() * 2}px`;
-		textArea.style.height = `${text.height() - text.padding() * 2}px`;
-		textArea.style.fontSize = `${text.fontSize()}px`;
-		textArea.style.border = "none";
-		textArea.style.padding = "0px";
-		textArea.style.margin = "0px";
-		textArea.style.overflow = "hidden";
-		textArea.style.background = "none";
-		textArea.style.outline = "none";
-		textArea.style.resize = "none";
-
-		textArea.focus();
-
-		// When the textArea loses focus, remove it and update the text
-		// textArea.addEventListener('blur', () => {
-		//   text.text(hljs.highlightAuto(textArea.value).value);
-		//   layerRef.current.batchDraw();
-		//   document.body.removeChild(textArea);
-		// });
-	});
-
-	return {
-		id,
-		type: "codeblock",
-		element: text,
-		x1,
-		y1,
-	};
-}
-
 const Canvas = () => {
 	const [elements, setElements] = useState([]);
 	const [selectedElement, selectElement] = useState(null);
@@ -188,6 +89,8 @@ const Canvas = () => {
 	const layerRef = useRef<Konva.Layer>();
 	const transformerRef = useRef<Konva.Transformer>();
 	const transformer = new Konva.Transformer();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [code, setCode] = useState("");
 	layerRef.current?.add(transformer);
 
 	// draw a box with half the dimensions as the stage whenever the page
@@ -323,202 +226,6 @@ const Canvas = () => {
 		}
 	};
 
-	function createCodeBlock() {
-		let codeBlockGroup = new Konva.Group();
-		let box = new Konva.Rect({
-			x: 320,
-			y: 180,
-			width: 640,
-			height: 360,
-			fill: "#22272e",
-			strokeWidth: 4,
-			cornerRadius: [25, 25, 20, 20],
-		});
-		codeBlockGroup.add(box);
-		box = new Konva.Rect({
-			x: 320,
-			y: 180,
-			width: 640,
-			height: 76,
-			fill: "#282c34",
-			strokeWidth: 4,
-			cornerRadius: [20, 20, 0, 0],
-		});
-		codeBlockGroup.add(box);
-		let circle = new Konva.Circle({
-			x: 320 + 33,
-			y: 180 + 38,
-			radius: 10,
-			fill: "#ff5f56",
-			strokeWidth: 4,
-		});
-		codeBlockGroup.add(circle);
-		circle = new Konva.Circle({
-			x: 320 + 66,
-			y: 180 + 38,
-			radius: 10,
-			fill: "#ffbd2e",
-			strokeWidth: 4,
-		});
-		codeBlockGroup.add(circle);
-		circle = new Konva.Circle({
-			x: 320 + 96,
-			y: 180 + 38,
-			radius: 10,
-			fill: "#27c93f",
-			strokeWidth: 4,
-		});
-		codeBlockGroup.add(circle);
-		let text = new Konva.Text({
-			x: 350,
-			y: 280,
-			text: "// put your code here",
-			fontSize: 20,
-			draggable: false,
-			fill: "gray",
-		});
-		codeBlockGroup.add(text);
-
-        codeBlockGroup.on("dblclick", () => {
-            console.log("double click");
-            // create a modal to edit the code
-            let modal = document.createElement("div");
-            modal.style.position = "absolute";
-            modal.style.top = "0px";
-            modal.style.left = "0px";
-            modal.style.width = "100%";
-            modal.style.height = "100%";
-            modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-            modal.style.zIndex = "100";
-            modal.style.display = "flex";
-            modal.style.alignItems = "center";
-            modal.style.justifyContent = "center";
-            document.body.appendChild(modal);
-
-            let modalContent = document.createElement("div");
-            modalContent.style.width = "50%";
-            modalContent.style.height = "50%";
-            modalContent.style.backgroundColor = "white";
-            modalContent.style.borderRadius = "10px";
-            modalContent.style.padding = "20px";
-            modalContent.style.overflow = "auto";
-            modal.appendChild(modalContent);
-            let modalTextArea = document.createElement("textarea");
-            modalTextArea.style.width = "100%";
-            modalTextArea.style.height = "100%";
-            modalTextArea.style.fontSize = "20px";
-            modalTextArea.style.border = "none";
-            modalTextArea.style.padding = "0px";
-            modalTextArea.value = text.text();
-            modalContent.appendChild(modalTextArea);
-            
-
-
-        });
-
-		text.on("dblclick click", () => {
-			text.destroy();
-			setAction("editing");
-			let textPosition = text.absolutePosition();
-			console.log(textPosition);
-			let areaPosition = {
-				x: textPosition.x,
-				y: textPosition.y,
-			};
-			console.log(areaPosition);
-			let textArea = document.createElement(
-				"textArea"
-			) as HTMLTextAreaElement;
-
-			document.body.appendChild(textArea);
-
-			textArea.value = "// put your code here";
-			textArea.style.position = "absolute";
-			textArea.style.top = "400px";
-			textArea.style.left = "452px";
-			textArea.style.width = "575px";
-			textArea.style.height = "200px";
-			textArea.style.fontSize = 20 + "px";
-			textArea.style.border = "none";
-			textArea.style.padding = "0px";
-			textArea.style.margin = "0px";
-			// textArea.style.overflow =
-			textArea.style.background = "black";
-			textArea.style.outline = "none";
-			textArea.style.resize = "none";
-			// textArea.style.lineHeight = text.lineHeight().toFixed();
-			// textArea.style.fontFamily = text.fontFamily();
-			textArea.spellcheck = false;
-			// textArea.style.transformOrigin = 'left top';
-			// textArea.style.textAlign = text.align();
-			textArea.style.color = text.fill();
-			let rotation = text.rotation();
-			var transform = "";
-			if (rotation) {
-				transform += "rotateZ(" + rotation + "deg)";
-			}
-
-			var px = 0;
-			var isFirefox =
-				navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
-			if (isFirefox) {
-				px += 2 + Math.round(20 / 20);
-			}
-			transform += "translateY(-" + px + "px)";
-
-			// textArea.style.transform = transform;
-
-			// // reset height
-			// textArea.style.height = "auto";
-			// // after browsers resized it we can set actual value
-			// textArea.style.height = textArea.scrollHeight + 3 + "px";
-
-			textArea.focus();
-
-			// when the esc key is pressed, remove the textarea
-			// and update the text on canvas
-			textArea.addEventListener("keydown", function (e) {
-				if (e.keyCode === 27) {
-					hljs.registerLanguage("javascript", languageJavascript);
-					let highlightedCode = hljs.highlightAuto(
-						textArea.value
-					).value;
-                    console.log(highlightedCode);
-					textArea.value = highlightedCode;
-					// add a code element to the html page
-					let codeElement = document.createElement("code");
-					codeElement.innerHTML = highlightedCode;
-					let preElement = document.createElement("pre");
-					preElement.appendChild(codeElement);
-					document.body.appendChild(preElement);
-					// text.text(highlightedCode);
-					removeTextArea();
-					hljs.highlightAll();
-				}
-			});
-
-			// textArea.addEventListener('keydown', function (e) {
-			//     if (e.keyCode === 13) {
-			//         text.text(textArea.value);
-			//         removeTextArea();
-			//     }
-			// });
-
-			function removeTextArea() {
-				textArea.parentNode.removeChild(textArea);
-				text.show();
-			}
-		});
-		codeBlockGroup.draggable(false);
-		return {
-			id: "0",
-			type: "codeblock",
-			element: codeBlockGroup,
-			x1: 320,
-			y1: 180,
-		};
-	}
-
 	const handleMouseUp = (e: any) => {
 		if (action === "drawing") {
 			selectElement(drawingElement);
@@ -573,31 +280,114 @@ const Canvas = () => {
 		setElements([...elements]);
 	};
 
+    function createCodeBlock() {
+		let codeBlockGroup = new Konva.Group();
+		let box = new Konva.Rect({
+			x: 320,
+			y: 180,
+			width: 640,
+			height: 360,
+			fill: "#22272e",
+			strokeWidth: 4,
+			cornerRadius: [25, 25, 20, 20],
+		});
+		codeBlockGroup.add(box);
+		box = new Konva.Rect({
+			x: 320,
+			y: 180,
+			width: 640,
+			height: 76,
+			fill: "#282c34",
+			strokeWidth: 4,
+			cornerRadius: [20, 20, 0, 0],
+		});
+		codeBlockGroup.add(box);
+		let circle = new Konva.Circle({
+			x: 320 + 33,
+			y: 180 + 38,
+			radius: 10,
+			fill: "#ff5f56",
+			strokeWidth: 4,
+		});
+		codeBlockGroup.add(circle);
+		circle = new Konva.Circle({
+			x: 320 + 66,
+			y: 180 + 38,
+			radius: 10,
+			fill: "#ffbd2e",
+			strokeWidth: 4,
+		});
+		codeBlockGroup.add(circle);
+		circle = new Konva.Circle({
+			x: 320 + 96,
+			y: 180 + 38,
+			radius: 10,
+			fill: "#27c93f",
+			strokeWidth: 4,
+		});
+		codeBlockGroup.add(circle);
+		let text = new Konva.Text({
+			x: 350,
+			y: 280,
+			text: "// double click to edit code",
+			fontSize: 20,
+			draggable: false,
+			fill: "gray",
+		});
+		codeBlockGroup.add(text);
+
+        codeBlockGroup.on("dblclick", () => {
+            console.log("double click");
+            setModalVisible(true);
+        });
+
+		codeBlockGroup.draggable(false);
+		return {
+			id: "0",
+			type: "codeblock",
+			element: codeBlockGroup,
+			x1: 320,
+			y1: 180,
+		};
+	}
+
+    const closeCodeModal = (modalCode = "") => {
+        setModalVisible(false);
+        console.log(modalCode);
+        setCode(modalCode);
+        console.log("code: " + code);
+    }
+
 	return (
 		<div style={{ backgroundColor: "#fff" }}>
-			<Stage
-				width={1280}
-				height={720}
-				onMouseDown={handleMouseDown}
-				onTouchStart={handleMouseDown}
-				onMouseUp={handleMouseUp}
-				onTouchEnd={handleMouseUp}
-				onMouseMove={handleMouseMove}
-				onTouchMove={handleMouseMove}
-			>
-				<Layer ref={layerRef}>
-					<Transformer
-						ref={transformerRef}
-						boundBoxFunc={(oldBox, newBox) => {
-							// limit resize
-							if (newBox.width < 5 || newBox.height < 5) {
-								return oldBox;
-							}
-							return newBox;
-						}}
-					/>
-				</Layer>
-			</Stage>
+            {modalVisible && <CodeModal closeModal={closeCodeModal} />}
+            <div>
+                <Stage
+                    width={1280}
+                    height={720}
+                    onMouseDown={handleMouseDown}
+                    onTouchStart={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onTouchEnd={handleMouseUp}
+                    onMouseMove={handleMouseMove}
+                    onTouchMove={handleMouseMove}
+                >
+                    <Layer ref={layerRef}>
+                        {selectedElement && (
+                            <Transformer
+                                ref={transformerRef}
+                                boundBoxFunc={(oldBox, newBox) => {
+                                    // limit resize
+                                    if (newBox.width < 5 || newBox.height < 5) {
+                                        return oldBox;
+                                    }
+                                    return newBox;
+                                }}
+                            />
+                        )}
+                    </Layer>
+                </Stage>
+            </div>
 		</div>
 	);
 };
