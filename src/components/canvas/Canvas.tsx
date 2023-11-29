@@ -337,7 +337,7 @@ const Canvas = () => {
             });
             codeBlockGroup.add(textBlockImage);
         };
-        imageObj.src = "https://konvajs.org/assets/yoda.jpg";
+        imageObj.src = "https://raw.githubusercontent.com/nikapadia/SuperSnippets/canvas-rework/src/assets/dot.png";
 
         codeBlockGroup.on("dblclick", () => {
             setModalVisible(true);
