@@ -340,7 +340,7 @@ const Canvas = () => {
 			y: 180,
 			width: 640,
 			height: 76,
-			fill: "#2f343a",
+			fill: "#282c34",
 			strokeWidth: 4,
 			cornerRadius: [20, 20, 0, 0],
 		});
@@ -379,8 +379,45 @@ const Canvas = () => {
 		});
 		codeBlockGroup.add(text);
 
-		text.on("dblclick", () => {
-			text.hide();
+        codeBlockGroup.on("dblclick", () => {
+            console.log("double click");
+            // create a modal to edit the code
+            let modal = document.createElement("div");
+            modal.style.position = "absolute";
+            modal.style.top = "0px";
+            modal.style.left = "0px";
+            modal.style.width = "100%";
+            modal.style.height = "100%";
+            modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            modal.style.zIndex = "100";
+            modal.style.display = "flex";
+            modal.style.alignItems = "center";
+            modal.style.justifyContent = "center";
+            document.body.appendChild(modal);
+
+            let modalContent = document.createElement("div");
+            modalContent.style.width = "50%";
+            modalContent.style.height = "50%";
+            modalContent.style.backgroundColor = "white";
+            modalContent.style.borderRadius = "10px";
+            modalContent.style.padding = "20px";
+            modalContent.style.overflow = "auto";
+            modal.appendChild(modalContent);
+            let modalTextArea = document.createElement("textarea");
+            modalTextArea.style.width = "100%";
+            modalTextArea.style.height = "100%";
+            modalTextArea.style.fontSize = "20px";
+            modalTextArea.style.border = "none";
+            modalTextArea.style.padding = "0px";
+            modalTextArea.value = text.text();
+            modalContent.appendChild(modalTextArea);
+            
+
+
+        });
+
+		text.on("dblclick click", () => {
+			text.destroy();
 			setAction("editing");
 			let textPosition = text.absolutePosition();
 			console.log(textPosition);
@@ -395,13 +432,13 @@ const Canvas = () => {
 
 			document.body.appendChild(textArea);
 
-			textArea.value = text.text();
+			textArea.value = "// put your code here";
 			textArea.style.position = "absolute";
 			textArea.style.top = "400px";
 			textArea.style.left = "452px";
 			textArea.style.width = "575px";
 			textArea.style.height = "200px";
-			textArea.style.fontSize = text.fontSize() + "px";
+			textArea.style.fontSize = 20 + "px";
 			textArea.style.border = "none";
 			textArea.style.padding = "0px";
 			textArea.style.margin = "0px";
@@ -409,11 +446,11 @@ const Canvas = () => {
 			textArea.style.background = "black";
 			textArea.style.outline = "none";
 			textArea.style.resize = "none";
-			textArea.style.lineHeight = text.lineHeight().toFixed();
-			textArea.style.fontFamily = text.fontFamily();
+			// textArea.style.lineHeight = text.lineHeight().toFixed();
+			// textArea.style.fontFamily = text.fontFamily();
 			textArea.spellcheck = false;
 			// textArea.style.transformOrigin = 'left top';
-			textArea.style.textAlign = text.align();
+			// textArea.style.textAlign = text.align();
 			textArea.style.color = text.fill();
 			let rotation = text.rotation();
 			var transform = "";
@@ -425,7 +462,7 @@ const Canvas = () => {
 			var isFirefox =
 				navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
 			if (isFirefox) {
-				px += 2 + Math.round(text.fontSize() / 20);
+				px += 2 + Math.round(20 / 20);
 			}
 			transform += "translateY(-" + px + "px)";
 
@@ -446,6 +483,7 @@ const Canvas = () => {
 					let highlightedCode = hljs.highlightAuto(
 						textArea.value
 					).value;
+                    console.log(highlightedCode);
 					textArea.value = highlightedCode;
 					// add a code element to the html page
 					let codeElement = document.createElement("code");
@@ -453,7 +491,7 @@ const Canvas = () => {
 					let preElement = document.createElement("pre");
 					preElement.appendChild(codeElement);
 					document.body.appendChild(preElement);
-					text.text(highlightedCode);
+					// text.text(highlightedCode);
 					removeTextArea();
 					hljs.highlightAll();
 				}
@@ -471,7 +509,7 @@ const Canvas = () => {
 				text.show();
 			}
 		});
-		codeBlockGroup.draggable(true);
+		codeBlockGroup.draggable(false);
 		return {
 			id: "0",
 			type: "codeblock",
