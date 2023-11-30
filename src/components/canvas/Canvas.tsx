@@ -206,7 +206,7 @@ const Canvas = () => {
 				let offsetX = clientX - elements[index].x1;
 				let offsetY = clientY - elements[index].y1;
 				selectElement({ ...elements[index], offsetX, offsetY });
-				selectedElement.element.draggable(true);
+				selectedElement?.element.draggable(true);
 				setAction("moving");
 			}
 		} else {
@@ -222,7 +222,7 @@ const Canvas = () => {
 			setAction("drawing");
 			setDrawingElement(element);
 			layerRef.current?.add(element.element).batchDraw();
-			transformer.nodes([element.element]);
+			// transformer.nodes([element.element]);
 		}
 	};
 
@@ -355,7 +355,7 @@ const Canvas = () => {
 
     const closeCodeModal = (modalCode: string) => {
         setModalVisible(false);
-        if (modalCode === "") return;
+        if (modalCode === null || modalCode === "") return;
         setCode(modalCode);
         const highlightedCode = hljs.highlight(modalCode, { language: "javascript" }).value;
         const offScreenDiv = document.createElement("div");
