@@ -7,7 +7,7 @@ import html2canvas from "html2canvas";
 
 import "highlight.js/styles/atom-one-dark.css";
 
-import languageJavascript from "highlight.js/lib/languages/javascript";
+// import languageJavascript from "highlight.js/lib/languages/javascript";
 
 function createElement(
 	id: string,
@@ -226,7 +226,7 @@ const Canvas = () => {
 		}
 	};
 
-	const handleMouseUp = (e: any) => {
+	const handleMouseUp = (/* e: any */) => {
 		if (action === "drawing") {
 			selectElement(drawingElement);
 		}
@@ -360,6 +360,7 @@ const Canvas = () => {
         const highlightedCode = hljs.highlight(modalCode, { language: "javascript" }).value;
         const offScreenDiv = document.createElement("div");
         offScreenDiv.innerHTML = `<pre><code>${highlightedCode}</code></pre>`;
+        offScreenDiv.style.fontSize = "16px";
         document.body.appendChild(offScreenDiv);
 
         html2canvas(offScreenDiv, {backgroundColor: null, height: 360, width: 640, x: -10}).then((canvas) => {

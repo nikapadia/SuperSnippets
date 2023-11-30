@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
-import { python } from "@codemirror/lang-python";
+// import { python } from "@codemirror/lang-python";
 // import "codemirror/keymap/sublime";
 // import "codemirror/theme/monokai.css";
 
