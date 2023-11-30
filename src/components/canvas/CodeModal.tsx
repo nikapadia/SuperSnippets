@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-// import { python } from "@codemirror/lang-python";
+// import { javascript } from "@codemirror/lang-javascript";
+import { python } from "@codemirror/lang-python";
 // import "codemirror/keymap/sublime";
 // import "codemirror/theme/monokai.css";
 
@@ -20,6 +20,7 @@ const CodeModal = ({ closeModal, initialText }) => {
 	};
 
 	const saveCode = () => {
+        console.log("code", text);
         closeModal(text);
     };
 
@@ -38,7 +39,7 @@ const CodeModal = ({ closeModal, initialText }) => {
                         <CodeMirror
                             value={text}
                             onChange={(value) => { setText(value); }}
-                            extensions={[javascript({jsx: true})]}
+                            extensions={[python()]}
                             basicSetup={{autocompletion: true}}
                             theme="dark"
                             ref={codeMirrorRef}

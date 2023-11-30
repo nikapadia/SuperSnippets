@@ -181,8 +181,6 @@ const Canvas = () => {
 		if (selectedElement) {
 			transformerRef.current.nodes([selectedElement.element]);
 			transformerRef.current.getLayer().batchDraw();
-		} else {
-			console.log("no selected element");
 		}
 	}, [selectedElement]);
 
@@ -325,6 +323,16 @@ const Canvas = () => {
 			fill: "#27c93f",
 			strokeWidth: 4,
 		});
+        let text = new Konva.Text({
+            x: 335,
+            y: 275,
+            text: "// double click to edit",
+            fontSize: 20,
+            draggable: false,
+            fill: "gray",
+            zIndex: -10,
+        });
+        codeBlockGroup.add(text);
 		codeBlockGroup.add(circle);
         var imageObj = new Image();
         imageObj.onload = function () {
@@ -355,21 +363,40 @@ const Canvas = () => {
 
     const closeCodeModal = (modalCode: string) => {
         setModalVisible(false);
-        if (modalCode === null || modalCode === "") return;
+        if (modalCode === null || modalCode === "") {
+            console.log("no code");
+            let codeBlock = elements[0];
+            codeBlock.element.find("Image")[0].image(null);
+            if (codeBlock.element.find("Text")[0] === undefined) {
+                console.log("add text");
+                let text = new Konva.Text({
+                    x: 335,
+                    y: 265,
+                    text: "// double click to edit",
+                    fontSize: 20,
+                    draggable: false,
+                    fill: "gray",
+                    zIndex: -10,
+                });
+                elements[0].element.add(text);
+            }
+            return;
+        };
         setCode(modalCode);
-        const highlightedCode = hljs.highlight(modalCode, { language: "javascript" }).value;
+        const highlightedCode = hljs.highlight(modalCode, { language: "python" }).value;
         const offScreenDiv = document.createElement("div");
         offScreenDiv.innerHTML = `<pre><code>${highlightedCode}</code></pre>`;
         offScreenDiv.style.fontSize = "16px";
         document.body.appendChild(offScreenDiv);
 
-        html2canvas(offScreenDiv, {backgroundColor: null, height: 360, width: 640, x: -10}).then((canvas) => {
-            let dataURL = canvas.toDataURL("image/png");
+        html2canvas(offScreenDiv, {backgroundColor: null, height: 360, width: 640, x: -10, scale: 1}).then((canvas) => {
+            let dataURL = canvas.toDataURL("image/webp", 1);
             let img = new Image();
             img.src = dataURL;
             img.onload = () => {
                 let codeBlock = elements[0];
                 codeBlock.element.find("Image")[0].image(img);
+                codeBlock.element.find("Text")[0].destroy(); // remove the "double click to edit" text
                 layerRef.current?.batchDraw();
             };
         });
@@ -379,7 +406,7 @@ const Canvas = () => {
     }
 
 	return (
-		<div style={{ backgroundColor: "#fff" }}>
+		<div style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}>
             {modalVisible && <CodeModal closeModal={closeCodeModal} initialText={code} />}
             <div>
                 <Stage
