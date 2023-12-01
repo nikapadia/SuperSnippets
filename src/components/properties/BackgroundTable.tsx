@@ -2,7 +2,7 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Input } from '@mui/material';
 import ColorPicker from "./ColorPicker";
-import './BackgroundTable.css'; // Import your CSS file
+import './backgroundTable.css'; // Import your CSS file
 
 const BackgroundTable = ({ properties, handleInputChange }) => {
   return (

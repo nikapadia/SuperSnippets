@@ -392,7 +392,7 @@ const Canvas = () => {
     }
 
 	return (
-		<div style={{ backgroundColor: "#fff", boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}>
+		<div style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}>
             {modalVisible && <CodeModal closeModal={closeCodeModal} initialText={code} />}
             <div>
                 <Stage
