@@ -4,6 +4,7 @@ import DropdownMenu from './Hooks';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Select } from '@mui/material';
 import { useContext } from 'react';
+import { ToolProvider } from '../../contexts/ToolContext';
 
 
 
@@ -58,44 +59,47 @@ function Toolbar() {
 
   return (
     <>
-      <div className="toolbar flex justify-between flex-row absolute box-border bg-core-grey z-10 inset-0 h-12 w-full">
-        <div className="flex justify-start items-center relative h-full basis-1/3">
+      <ToolProvider>
+        <div className="toolbar flex justify-between flex-row absolute box-border bg-core-grey z-10 inset-0 h-12 w-full">
+          <div className="flex justify-start items-center relative h-full basis-1/3">
 
 
-          <ThemeProvider theme={theme}>
+            <ThemeProvider theme={theme}>
 
-            <DropdownMenu buttonType="CodeBlock" openButton={openButton} setOpenButton={setOpenButton} />
-            <DropdownMenu buttonType="TextT" openButton={openButton} setOpenButton={setOpenButton} />
-            <DropdownMenu buttonType="square" openButton={openButton} setOpenButton={setOpenButton} />
-            <DropdownMenu buttonType="Cursor" openButton={openButton} setOpenButton={setOpenButton} />
-            <DropdownMenu buttonType="Pen" openButton={openButton} setOpenButton={setOpenButton} />
+              <DropdownMenu buttonType="CodeBlock" openButton={openButton} setOpenButton={setOpenButton} />
+              <DropdownMenu buttonType="TextT" openButton={openButton} setOpenButton={setOpenButton} />
+              <DropdownMenu buttonType="square" openButton={openButton} setOpenButton={setOpenButton} />
+              <DropdownMenu buttonType="Cursor" openButton={openButton} setOpenButton={setOpenButton} />
+              <DropdownMenu buttonType="Pen" openButton={openButton} setOpenButton={setOpenButton} />
 
-          </ThemeProvider>
-
-
+            </ThemeProvider>
 
 
-        </div>
 
 
-        <div className="flex justify-center items-center h-full basis-2/5">
-          <input
-            value={value}
-            onChange={handleChange}
-            className="document-title"
-          />
-        </div>
+          </div>
 
-        <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
-          <button className="flex justify-center border-0 p-2 rounded bg-blue-500 hover:rounded-lg"> Export </button>
-          <button className="flex justify-center border-0 p-2 rounded bg-green-400 hover:rounded-lg"> Share </button>
-          <div className="flex items-center h-8 p-2 border-o text-center hover:bg-black box-content">
-            <div>100%</div>
+
+          <div className="flex justify-center items-center h-full basis-2/5">
+            <input
+              value={value}
+              onChange={handleChange}
+              className="document-title"
+            />
+          </div>
+
+          <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
+            <button className="flex justify-center border-0 p-2 rounded bg-blue-500 hover:rounded-lg"> Export </button>
+            <button className="flex justify-center border-0 p-2 rounded bg-green-400 hover:rounded-lg"> Share </button>
+            <div className="flex items-center h-8 p-2 border-o text-center hover:bg-black box-content">
+              <div>100%</div>
+            </div>
           </div>
         </div>
-      </div>
+      </ToolProvider>
     </>
   );
 }
+
 
 export default Toolbar;

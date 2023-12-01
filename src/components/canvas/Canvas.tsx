@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { Stage, Layer, Transformer } from "react-konva";
 import Konva from "konva";
 import { ToolContext } from "../../contexts/ToolContext";
+import { useContext } from "react";
 
 function createElement(id: string, type: string, x1: number, y1: number, x2: number, y2: number) {
     let element: Konva.Shape;
@@ -61,16 +62,21 @@ function createElement(id: string, type: string, x1: number, y1: number, x2: num
 
 
 const Canvas = () => {
-	const [elements, setElements] = useState([]);
-	const [selectedElement, selectElement] = useState(null);
+    const [elements, setElements] = useState([]);
+    const [selectedElement, selectElement] = useState(null);
     const [drawingElement, setDrawingElement] = useState(null);
     const [action, setAction] = useState("none");
-    const [tool, setTool] = useState("selection");
+
+    const { tool, setTool } = useContext(ToolContext);
+
     const layerRef = useRef<Konva.Layer>();
     // const stageRef = useRef<Konva.Stage>();
     const transformerRef = useRef<Konva.Transformer>();
     const transformer = new Konva.Transformer();
     layerRef.current?.add(transformer);
+
+    // export the tool hook
+
 
     // Handle keyboard shortcuts
     useEffect(() => {
@@ -139,7 +145,7 @@ const Canvas = () => {
         return () => {
             document.removeEventListener("keydown", keyHandler);
         };
-	}, []);
+    }, []);
 
     useEffect(() => {
         if (selectedElement) {
@@ -150,7 +156,7 @@ const Canvas = () => {
         }
     }, [selectedElement]);
 
-	const handleMouseDown = (e: any) => {
+    const handleMouseDown = (e: any) => {
         const pos = e.target.getStage().getPointerPosition();
         const clientX = pos.x;
         const clientY = pos.y;
@@ -163,11 +169,11 @@ const Canvas = () => {
             } else {
                 clickedElement = e.target;
                 // find clickedElement in elements
-                const index = elements.findIndex(e => e.element === clickedElement); 
+                const index = elements.findIndex(e => e.element === clickedElement);
                 if (index === -1) return;
                 let offsetX = clientX - elements[index].x1;
                 let offsetY = clientY - elements[index].y1;
-                selectElement({...elements[index], offsetX, offsetY});
+                selectElement({ ...elements[index], offsetX, offsetY });
                 selectedElement.element.draggable(true);
                 setAction("moving");
             }
@@ -178,8 +184,8 @@ const Canvas = () => {
             setDrawingElement(element);
             layerRef.current?.add(element.element).batchDraw();
             transformer.nodes([element.element]);
-        } 
-	};
+        }
+    };
 
     const handleMouseUp = (e: any) => {
         if (action === "drawing") {
@@ -228,20 +234,20 @@ const Canvas = () => {
         setElements([...elements]);
     }
 
-	return (
-		<div style={{ backgroundColor: "#fff" }}>
-			<Stage
-				width={1280}
-				height={720}
-				onMouseDown={handleMouseDown}
-				onTouchStart={handleMouseDown}
-				onMouseUp={handleMouseUp}
-				onTouchEnd={handleMouseUp}
-				onMouseMove={handleMouseMove}
-				onTouchMove={handleMouseMove}
-			>
-				<Layer ref={layerRef}>
-                    <Transformer ref={transformerRef} 
+    return (
+        <div style={{ backgroundColor: "#fff" }}>
+            <Stage
+                width={1280}
+                height={720}
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onTouchEnd={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                onTouchMove={handleMouseMove}
+            >
+                <Layer ref={layerRef}>
+                    <Transformer ref={transformerRef}
                         boundBoxFunc={(oldBox, newBox) => {
                             // limit resize
                             if (newBox.width < 5 || newBox.height < 5) {
@@ -250,10 +256,10 @@ const Canvas = () => {
                             return newBox;
                         }}
                     />
-				</Layer>
-			</Stage>
-		</div>
-	);
+                </Layer>
+            </Stage>
+        </div>
+    );
 };
 
 export default Canvas;

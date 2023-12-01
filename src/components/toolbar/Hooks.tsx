@@ -280,8 +280,9 @@ export default function DropdownMenu({ buttonType, openButton, setOpenButton }) 
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={(event) => {
-                    setTool("rectangle");
                     handleClick(event);
+                    setTool("rectangle");
+                    console.log(tool);
                 }}
                 style={{
                     maxWidth: '48px',
