@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 256 256" fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <filter id="drop-shadow-filter-0" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="drop-shadow 1 8 10 0 1 rgba(0,0,0,0.3)">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0"/>
+      <feOffset dx="8" dy="10"/>
+      <feComponentTransfer result="offsetblur">
+        <feFuncA id="spread-ctrl" type="linear" slope="2"/>
+      </feComponentTransfer>
+      <feFlood flood-color="rgba(0,0,0,0.3)"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect style="stroke: rgb(0, 0, 0); stroke-width: 0px; fill: rgb(72, 108, 240); filter: none;" x="0" y="0" width="256" height="256" rx="32" ry="32"/>
+  <path d="M 155.676 111.922 C 152.993 108.002 153.996 102.642 157.923 99.964 L 230.611 50.225 C 236.236 46.741 243.522 50.659 243.721 57.269 C 243.808 60.071 242.525 62.737 240.279 64.417 L 167.579 114.156 C 166.155 115.138 164.466 115.663 162.735 115.66 C 159.912 115.647 157.272 114.252 155.676 111.922 Z M 242.554 203.333 C 239.875 207.249 234.527 208.25 230.611 205.569 L 132.333 138.318 L 86.665 169.557 C 97.573 197.259 74.402 226.382 44.959 221.977 C 15.514 217.574 1.877 182.948 20.415 159.649 C 34.438 142.026 60.491 140.064 76.994 155.389 L 117.11 127.894 L 76.943 100.405 C 55.193 120.565 19.776 109.618 13.188 80.703 C 6.604 51.789 33.794 26.59 62.125 35.343 C 83.536 41.959 94.803 65.38 86.61 86.235 L 240.234 191.378 C 244.185 194.032 245.228 199.395 242.554 203.333 Z M 72.171 183.76 C 72.175 167.22 54.272 156.879 39.948 165.146 C 25.62 173.412 25.617 194.09 39.939 202.362 C 48.36 207.225 58.997 205.828 65.878 198.952 C 69.922 194.93 72.19 189.462 72.171 183.76 Z M 65.878 87.213 C 77.574 75.519 72.226 55.548 56.252 51.263 C 40.273 46.982 25.655 61.596 29.928 77.577 C 30.907 81.219 32.827 84.544 35.494 87.213 C 43.849 95.689 57.523 95.689 65.878 87.213 Z" style="fill: rgb(255, 255, 255); filter: url('#drop-shadow-filter-0'); transform-origin: 128px 128px;"/>
+</svg>

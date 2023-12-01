@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BackgroundTable from './BackgroundTable';
 import Prop1Table from './Prop1Table';
 import Prop2Table from './Prop2Table';
+// import React from "react";
 import "./propertiesPanel.css";
 
 function PropertiesPanel() {

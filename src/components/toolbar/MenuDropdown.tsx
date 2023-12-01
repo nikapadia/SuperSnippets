@@ -9,9 +9,9 @@ import Button from '@mui/material/Button';
 import MenuList from '@mui/material/MenuList';
 import { CodeBlock, TextT, Cursor, Pen, Square, LineSegment, ArrowUpRight, Circle, Shapes, Star, FileImage } from "@phosphor-icons/react";
 
-interface DropdownMenuProps {
-    buttonType?: string;
-}
+// interface DropdownMenuProps {
+//     buttonType?: string;
+// }
 
 
 export default function DropdownMenu({ buttonType, openButton, setOpenButton }) {
