@@ -1,17 +1,19 @@
-import React from 'react'
-import { MuiColorInput } from 'mui-color-input'
-
+import React from 'react';
+import { MuiColorInput } from 'mui-color-input';
+import './backgroundTable.css';
 const ColorPicker = () => {
-  const [color, setColor] = React.useState('#ffffff')
+  const initialColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-bg-color-dark').trim();
 
-  const handleChange = (newColor: React.SetStateAction<string> | null) => {
-    document.documentElement.style.setProperty('--color-picker-bg', newColor as string);
-    setColor(newColor as string);
+  const [color, setColor] = React.useState(initialColor);
+
+  const handleChange = (newColor) => {
+    document.documentElement.style.setProperty('--color-picker-bg', newColor);
+    setColor(newColor);
   }
 
   return (
-    <MuiColorInput format="hex8" value={color} onChange={handleChange} />
-  )
+    <MuiColorInput className="custom-color-picker" format="hex8" value={color} onChange={handleChange} />
+  );
 }
 
 export default ColorPicker;
