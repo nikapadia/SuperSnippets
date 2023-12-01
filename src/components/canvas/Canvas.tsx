@@ -47,7 +47,7 @@ function createElement(
 				pointerWidth: 20,
 				fill: "black",
 				stroke: "black",
-				strokeWidth: 4,
+				strokeWidth: 2,
 				draggable: true,
 			});
 			break;
@@ -92,7 +92,6 @@ const Canvas = () => {
     const [code, setCode] = useState("");
 	layerRef.current?.add(transformer);
 
-	// draw a box with half the dimensions as the stage whenever the page
 	useEffect(() => {
 		let element = createCodeBlock();
 		transformer.nodes([element.element]);
@@ -393,7 +392,7 @@ const Canvas = () => {
     }
 
 	return (
-		<div style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}>
+		<div style={{ backgroundColor: "#fff", boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}>
             {modalVisible && <CodeModal closeModal={closeCodeModal} initialText={code} />}
             <div>
                 <Stage
