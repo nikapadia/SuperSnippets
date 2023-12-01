@@ -141,20 +141,16 @@ const Canvas = () => {
 					}
 					break;
 				// The below cases are for testing purposes
-				case "9":
-					if (selectedElement) {
-						const index = elements.findIndex(
-							(e) => e.element === selectedElement.element
-						);
-						if (index === -1) return;
-						selectedElement.element.remove();
-						elements.splice(index, 1);
-						setElements([...elements]);
-						selectElement(null);
-						layerRef.current?.batchDraw();
-						transformer.nodes([]);
-						transformerRef.current.getLayer().batchDraw();
-					}
+				case "Delete":
+                case "Backspace":
+                    if (selectedElement === null || selectElement === undefined) break;        
+                    console.log("delete");
+                    let element = selectedElement?.element;
+                    element.destroy();
+                    transformerRef.current?.detach();
+                    selectElement(null);
+                    // element.remove();
+                    layerRef.current?.batchDraw();
 					break;
 				default:
 					break;
@@ -340,6 +336,7 @@ const Canvas = () => {
 
         codeBlockGroup.on("dblclick", () => {
             setModalVisible(true);
+            selectElement(null);
         });
 
 		codeBlockGroup.draggable(false);
@@ -375,11 +372,12 @@ const Canvas = () => {
         const highlightedCode = hljs.highlight(modalCode, { language: "python" }).value;
         const offScreenDiv = document.createElement("div");
         offScreenDiv.innerHTML = `<pre><code>${highlightedCode}</code></pre>`;
-        offScreenDiv.style.fontSize = "16px";
+        offScreenDiv.style.fontSize = "18px";
+        offScreenDiv.style.lineHeight = "1.2";
         document.body.appendChild(offScreenDiv);
 
         html2canvas(offScreenDiv, {backgroundColor: null, height: 360, width: 640, x: -10, scale: 1}).then((canvas) => {
-            let dataURL = canvas.toDataURL("image/webp", 1);
+            let dataURL = canvas.toDataURL("image/svg", 1);
             let img = new Image();
             img.src = dataURL;
             img.onload = () => {
