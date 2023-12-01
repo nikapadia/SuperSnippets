@@ -21,7 +21,7 @@ const BackgroundTable = ({ properties, handleInputChange }) => {
                 <TableCell component="th" scope="row">
                   {property.name}
                 </TableCell>
-                <TableCell colSpan={2}>
+                <TableCell className="colorPickerContainer" colSpan={2}>
                   <ColorPicker />
                 </TableCell>
               </TableRow>

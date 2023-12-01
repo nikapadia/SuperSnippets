@@ -29,8 +29,9 @@
   .TableContainer.dark-mode .MuiTablePagination-caption {
     color: #ffffff; /* Dark mode text color for pagination caption */
   }
-.custom-color-picker {
-    color: #ffffff; /* Set the text color to white */
+  .colorPickerContainer {
+    width: 200%; /* Adjust the width as needed */
   }
+  
   
   
