@@ -9,7 +9,9 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary-bg-color-dark: #242424;
+  --primary-bg-color-light: #242424;
+  --color-picker-bg: var(--primary-bg-color-dark);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -33,6 +35,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--color-picker-bg);
 }
 
 h1 {
@@ -62,12 +65,12 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: var(--primary-bg-color-light);
   }
   a:hover {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: var(--primary-bg-color-light);
   }
 }

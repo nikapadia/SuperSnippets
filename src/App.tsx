@@ -14,8 +14,8 @@ function App() {
                 <div className='canvas'>
                     <Canvas />
                 </div>
-                {/* <ElementsPanel />
-                <PropertiesPanel /> */}
+                {/* <ElementsPanel />*/}
+                <PropertiesPanel /> 
             </div>
         </div>
     );
