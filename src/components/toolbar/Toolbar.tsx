@@ -60,11 +60,10 @@ function Toolbar() {
 
           <ThemeProvider theme={theme}>
 
-            <DropdownMenu buttonType="CodeBlock" openButton={openButton} setOpenButton={setOpenButton} />
-            <DropdownMenu buttonType="TextT" openButton={openButton} setOpenButton={setOpenButton} />
-            <DropdownMenu buttonType="square" openButton={openButton} setOpenButton={setOpenButton} />
             <DropdownMenu buttonType="Cursor" openButton={openButton} setOpenButton={setOpenButton} />
+            <DropdownMenu buttonType="square" openButton={openButton} setOpenButton={setOpenButton} />
             <DropdownMenu buttonType="Pen" openButton={openButton} setOpenButton={setOpenButton} />
+            <DropdownMenu buttonType="TextT" openButton={openButton} setOpenButton={setOpenButton} />
 
           </ThemeProvider>
 
@@ -83,9 +82,8 @@ function Toolbar() {
         </div>
 
         <div className="flex justify-end items-center h-full gap-2 pr-2 basis-1/3">
-          <button className="flex justify-center border-0 p-2 rounded bg-blue-500 hover:rounded-lg"> Export </button>
-          <button className="flex justify-center border-0 p-2 rounded bg-green-400 hover:rounded-lg"> Share </button>
-          <div className="flex items-center h-8 p-2 border-o text-center hover:bg-black box-content">
+          <button className="modal-button text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-2.5 py-1.5 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"> Export </button>
+          <div className="flex items-center h-8 p-2 border-o text-center text-white hover:bg-black box-content">
             <div>100%</div>
           </div>
         </div>
