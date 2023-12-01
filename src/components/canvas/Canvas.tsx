@@ -426,4 +426,10 @@ const Canvas = () => {
 	);
 };
 
+const canvasStyle = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+};
+
 export default Canvas;

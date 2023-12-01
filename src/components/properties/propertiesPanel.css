@@ -6,3 +6,18 @@
 .panel-properties {
     border-left: 1px solid #353535;
 }
+
+.panel-properties .TableContainer {
+    width: 100%;
+    overflow: hidden;
+    padding-right: 20px;
+}
+  
+.panel-properties .input-fields {
+    text-align: right;
+    width: 50px;
+}
+
+.panel-properties .color-picker {
+    background-color: var(--primary-color); /* Use the global color variable */
+  }

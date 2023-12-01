@@ -1,0 +1,36 @@
+/* BackgroundTable.css */
+.TableContainer.dark-mode {
+    background-color: #1e1e1e; /* Dark mode background color */
+    color: #ffffff; /* Dark mode text color */
+  }
+  
+  .TableContainer.dark-mode th,
+  .TableContainer.dark-mode td {
+    color: white;
+    border-bottom: 1px solid #000000; /* Dark mode border color for table headers and cells */
+  }
+  
+  .TableContainer.dark-mode .input-fields {
+    color: #ffffff; /* Dark mode text color for input fields */
+  }
+  
+  .TableContainer.dark-mode .MuiInput-underline:before {
+    border-bottom-color: #ffffff; /* Dark mode underline color for input fields */
+  }
+  
+  .TableContainer.dark-mode .MuiInput-underline:after {
+    border-bottom-color: #ffffff; /* Dark mode underline color for input fields when focused */
+  }
+  
+  .TableContainer.dark-mode .MuiInput-underline:hover:not(.Mui-disabled):before {
+    border-bottom-color: #ffffff; /* Dark mode underline color for input fields on hover */
+  }
+  
+  .TableContainer.dark-mode .MuiTablePagination-caption {
+    color: #ffffff; /* Dark mode text color for pagination caption */
+  }
+.custom-color-picker {
+    color: #ffffff; /* Set the text color to white */
+  }
+  
+  
