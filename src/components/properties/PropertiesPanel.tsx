@@ -28,9 +28,9 @@ function PropertiesPanel() {
   const [activeTable, setActiveTable] = useState(0);
 
   const handleKeyPress = (event) => {
-    if (event.key === 'q' || event.key === 'Q') {
-      setActiveTable((activeTable + 1) % tables.length);
-    }
+    // if (event.key === 'q' || event.key === 'Q') {
+    //   setActiveTable((activeTable + 1) % tables.length);
+    // }
   };
 
   useEffect(() => {
