@@ -67,7 +67,6 @@ function createElement(
 			// return createCodeBlock();
 			break;
 		default:
-			console.log("Unknown type");
 			return;
 	}
 	return {
@@ -142,17 +141,8 @@ const Canvas = () => {
 					}
 					break;
 				// The below cases are for testing purposes
-				case "8":
-					if (selectedElement && selectedElement.type === "line") {
-						selectedElement.element.strokeWidth(
-							selectedElement.element.strokeWidth() + 1
-						);
-						layerRef.current?.batchDraw();
-					}
-					break;
 				case "9":
 					if (selectedElement) {
-						console.log("delete");
 						const index = elements.findIndex(
 							(e) => e.element === selectedElement.element
 						);
@@ -285,7 +275,7 @@ const Canvas = () => {
 			y: 180,
 			width: 640,
 			height: 360,
-			fill: "#22272e",
+			fill: "#282c34",
 			strokeWidth: 4,
 			cornerRadius: [25, 25, 20, 20],
 		});
@@ -294,15 +284,15 @@ const Canvas = () => {
 			x: 320,
 			y: 180,
 			width: 640,
-			height: 76,
-			fill: "#282c34",
+			height: 56,
+			fill: "#353840",
 			strokeWidth: 4,
 			cornerRadius: [20, 20, 0, 0],
 		});
 		codeBlockGroup.add(box);
 		let circle = new Konva.Circle({
 			x: 320 + 33,
-			y: 180 + 38,
+			y: 180 + 28,
 			radius: 10,
 			fill: "#ff5f56",
 			strokeWidth: 4,
@@ -310,7 +300,7 @@ const Canvas = () => {
 		codeBlockGroup.add(circle);
 		circle = new Konva.Circle({
 			x: 320 + 66,
-			y: 180 + 38,
+			y: 180 + 28,
 			radius: 10,
 			fill: "#ffbd2e",
 			strokeWidth: 4,
@@ -318,14 +308,14 @@ const Canvas = () => {
 		codeBlockGroup.add(circle);
 		circle = new Konva.Circle({
 			x: 320 + 96,
-			y: 180 + 38,
+			y: 180 + 28,
 			radius: 10,
 			fill: "#27c93f",
 			strokeWidth: 4,
 		});
         let text = new Konva.Text({
             x: 335,
-            y: 275,
+            y: 255,
             text: "// double click to edit",
             fontSize: 20,
             draggable: false,
@@ -337,15 +327,16 @@ const Canvas = () => {
         var imageObj = new Image();
         imageObj.onload = function () {
             var textBlockImage = new Konva.Image({
-                x: 325,
-                y: 255,
+                x: 330,
+                y: 240,
                 image: imageObj,
                 // width: 630,
                 // height: 270,
             });
             codeBlockGroup.add(textBlockImage);
         };
-        imageObj.src = "https://raw.githubusercontent.com/nikapadia/SuperSnippets/canvas-rework/src/assets/dot.png";
+        // This is needed because you can't have an image without a source for some reason
+        imageObj.src = "https://raw.githubusercontent.com/nikapadia/SuperSnippets/main/src/assets/dot.png";
 
         codeBlockGroup.on("dblclick", () => {
             setModalVisible(true);
@@ -364,14 +355,12 @@ const Canvas = () => {
     const closeCodeModal = (modalCode: string) => {
         setModalVisible(false);
         if (modalCode === null || modalCode === "") {
-            console.log("no code");
             let codeBlock = elements[0];
             codeBlock.element.find("Image")[0].image(null);
             if (codeBlock.element.find("Text")[0] === undefined) {
-                console.log("add text");
                 let text = new Konva.Text({
                     x: 335,
-                    y: 265,
+                    y: 255,
                     text: "// double click to edit",
                     fontSize: 20,
                     draggable: false,

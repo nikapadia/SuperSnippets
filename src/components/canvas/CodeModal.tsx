@@ -20,7 +20,6 @@ const CodeModal = ({ closeModal, initialText }) => {
 	};
 
 	const saveCode = () => {
-        console.log("code", text);
         closeModal(text);
     };
 
