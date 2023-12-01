@@ -25,7 +25,7 @@ const BackgroundTable = ({ properties, handleInputChange }) => {
                   <ColorPicker />
                 </TableCell>
               </TableRow>
-              <TableRow>
+              {/* <TableRow>
                 <TableCell component="th" scope="row">
                   {property.name} (Input)
                 </TableCell>
@@ -55,7 +55,7 @@ const BackgroundTable = ({ properties, handleInputChange }) => {
                     }}
                   />
                 </TableCell>
-              </TableRow>
+              </TableRow> */}
             </React.Fragment>
           ))}
         </TableBody>
