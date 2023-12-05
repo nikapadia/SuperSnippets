@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, MutableRefObject } from 'react';
+import { jsPDF } from "jspdf";
+import Tiff from 'tiff.js';
 import './exportmodal.css';
 
 interface ExportModalProps {
@@ -59,6 +61,38 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
     }
   };
 
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    const dataUrl = layerRef.current?.toDataURL("image/jpeg", 1);
+    if (dataUrl) {
+      doc.addImage(dataUrl, "JPEG", 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+      doc.save("SuperSnippets.pdf");
+    }
+  };
+
+  const handleExportTIFF = () => {
+    const canvas = layerRef.current;
+    if (canvas) {
+      const width = canvas.width;
+      const height = canvas.height;
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx?.getImageData(0, 0, width, height);
+      if (imageData) {
+        const tiff = new Tiff({ width: width, height: height });
+        tiff.writeDirectory();
+        tiff.writeImage(imageData);
+        const tiffData = tiff.end();
+        const blob = new Blob([tiffData], { type: 'image/tiff' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'SuperSnippets.tiff';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  };
 
   return (
     <div className="export-modal" onClick={onClose}>
@@ -72,6 +106,8 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
             <button className="export-button" onClick={handleExport}>Export to PNG</button>
             <button className="export-button" onClick={handleExportJPEG}>Export to JPEG</button>
             <button className="export-button" onClick={handleExportWEBP}>Export to WEBP</button>
+            <button className="export-button" onClick={handleExportPDF}>Export to PDF</button>
+            <button className="export-button" onClick={handleExportTIFF}>Export to TIFF</button>
           </div>
         </div>
       </div>
