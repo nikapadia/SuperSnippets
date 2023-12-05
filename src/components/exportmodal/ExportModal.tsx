@@ -35,17 +35,43 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
     }
   };
 
+  const handleExportJPEG = () => {
+    const dataUrl = layerRef.current?.toDataURL({ format: 'jpeg', quality: 1 });
+    if (dataUrl) {
+      const link = document.createElement('a');
+      link.download = 'SuperSnippets.jpeg';
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleExportWEBP = () => {
+    const dataUrl = layerRef.current?.toDataURL({ format: 'webp', quality: 1 });
+    if (dataUrl) {
+      const link = document.createElement('a');
+      link.download = 'SuperSnippets.webp';
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
 
   return (
     <div className="export-modal" onClick={onClose}>
       <div className="modal-content" onClick={stopPropagation}>
-      <div className="modal-flex-container">
-        <div className="canvas-container">
-        {dataUrl && <img className="canvas-content" src={dataUrl} alt="Canvas Preview" />}
-        </div>
+        <div className="modal-flex-container">
+          <div className="canvas-container">
+            {dataUrl && <img className="canvas-content" src={dataUrl} alt="Canvas Preview" />}
+          </div>
           <button className="close-button" onClick={onClose}>X</button>
           <div className="export-buttons">
             <button className="export-button" onClick={handleExport}>Export to PNG</button>
+            <button className="export-button" onClick={handleExportJPEG}>Export to JPEG</button>
+            <button className="export-button" onClick={handleExportWEBP}>Export to WEBP</button>
           </div>
         </div>
       </div>
