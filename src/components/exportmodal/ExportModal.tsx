@@ -95,13 +95,13 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
   };
 
   return (
-    <div className="export-modal" onClick={onClose}>
+    <div className={`export-modal ${isOpen ? 'open' : ''}`} onClick={onClose}>
       <div className="modal-content" onClick={stopPropagation}>
         <div className="modal-flex-container">
           <div className="canvas-container">
             {dataUrl && <img className="canvas-content" src={dataUrl} alt="Canvas Preview" />}
           </div>
-          <button className="close-button" onClick={onClose}>X</button>
+          <button className="close-button" onClick={onClose}>x</button>
           <div className="export-buttons">
             <button className="export-button" onClick={handleExport}>Export to PNG</button>
             <button className="export-button" onClick={handleExportJPEG}>Export to JPEG</button>
