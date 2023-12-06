@@ -117,6 +117,12 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
     link.click();
   };
 
+  const [filter, setFilter] = useState('none');
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+
   return (
     <div className={`export-modal ${isOpen ? 'open' : ''}`} onClick={onClose}>
       <div className="modal-content" onClick={stopPropagation}>
@@ -130,6 +136,13 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
           <label htmlFor="scale-slider">Scaling</label>
           <input type="range" min="0.1" max="2" step="0.1" value={scale} onChange={handleScaleChange} />
           </div>
+          <label htmlFor="filter-select">Filter</label>
+            <select id="filter-select" value={filter} onChange={handleFilterChange}>
+              <option value="none">None</option>
+              <option value="grayscale(100%)">Grayscale</option>
+              <option value="sepia(100%)">Sepia</option>
+              <option value="invert(100%)">Invert</option>
+            </select>
             <button className="export-button" onClick={handleExport}>Export to PNG</button>
             <button className="export-button" onClick={handleExportJPEG}>Export to JPEG</button>
             <button className="export-button" onClick={handleExportWEBP}>Export to WEBP</button>

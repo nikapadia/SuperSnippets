@@ -69,7 +69,7 @@
 
 .export-buttons {
   position: absolute;
-  bottom: 20px;
+  top: 120px;
   right: 40px;
   display: flex;
   gap: 10px;
