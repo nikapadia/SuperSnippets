@@ -123,18 +123,30 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
     setFilter(event.target.value);
   };
 
+  const [zoom, setZoom] = useState(1);
+
+  const handleZoomChange = (event) => {
+    setZoom(event.target.value);
+  };
+
+  const [isFixedSize, setIsFixedSize] = useState(false);
+
+  const handleFixedSizeChange = (event) => {
+    setIsFixedSize(event.target.checked);
+  };
+
   return (
     <div className={`export-modal ${isOpen ? 'open' : ''}`} onClick={onClose}>
       <div className="modal-content" onClick={stopPropagation}>
         <div className="modal-flex-container">
-          <div className="canvas-container">
-            {dataUrl && <img className="canvas-content" src={dataUrl} alt="Canvas Preview" />}
-          </div>
+        <div className="canvas-container" style={{ width: isFixedSize ? '640px' : '100%', height: isFixedSize ? '360px' : '100%' }}>
+          {dataUrl && <img className="canvas-content" src={dataUrl} alt="Canvas Preview" style={{ transform: `scale(${zoom})`, transformOrigin: '0 0' }} />}
+        </div>
           <button className="close-button" onClick={onClose}>x</button>
           <div className="export-buttons">
           <div className="slider-container">
-          <label htmlFor="scale-slider">Scaling</label>
-          <input type="range" min="0.1" max="2" step="0.1" value={scale} onChange={handleScaleChange} />
+            <label htmlFor="zoom-slider">Zoom</label>
+            <input id="zoom-slider" type="range" min="0.1" max="2" step="0.1" value={zoom} onChange={handleZoomChange} />
           </div>
           <label htmlFor="filter-select">Filter</label>
             <select id="filter-select" value={filter} onChange={handleFilterChange}>
@@ -143,12 +155,13 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
               <option value="sepia(100%)">Sepia</option>
               <option value="invert(100%)">Invert</option>
             </select>
+            <label htmlFor="fixed-size-checkbox">Export Code Block</label>
+            <input id="fixed-size-checkbox" type="checkbox" checked={isFixedSize} onChange={handleFixedSizeChange} />
             <button className="export-button" onClick={handleExport}>Export to PNG</button>
             <button className="export-button" onClick={handleExportJPEG}>Export to JPEG</button>
             <button className="export-button" onClick={handleExportWEBP}>Export to WEBP</button>
             <button className="export-button" onClick={handleExportPDF}>Export to PDF</button>
             <button className="export-button" onClick={handleExportTIFF}>Export to TIFF</button>
-            <button className="export-button" onClick={handleFixedSizeExport}>Export Code Block</button>
           </div>
         </div>
       </div>
