@@ -101,6 +101,22 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
     }
   };
 
+  const handleFixedSizeExport = () => {
+    const originalCanvas = layerRef.current;
+    const newCanvas = document.createElement('canvas');
+    newCanvas.width = 640;
+    newCanvas.height = 360;
+    const context = newCanvas.getContext('2d');
+    if (context) {
+      context.drawImage(originalCanvas, 0, 0, 640, 360);
+    }
+    const dataUrl = newCanvas.toDataURL();
+    const link = document.createElement('a');
+    link.download = 'export.png';
+    link.href = dataUrl;
+    link.click();
+  };
+
   return (
     <div className={`export-modal ${isOpen ? 'open' : ''}`} onClick={onClose}>
       <div className="modal-content" onClick={stopPropagation}>
@@ -119,6 +135,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
             <button className="export-button" onClick={handleExportWEBP}>Export to WEBP</button>
             <button className="export-button" onClick={handleExportPDF}>Export to PDF</button>
             <button className="export-button" onClick={handleExportTIFF}>Export to TIFF</button>
+            <button className="export-button" onClick={handleFixedSizeExport}>Export Code Block</button>
           </div>
         </div>
       </div>
