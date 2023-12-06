@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, MutableRefObject } from 'react';
+import React, { useRef, useEffect, MutableRefObject, useState } from 'react';
 import { jsPDF } from "jspdf";
 import Tiff from 'tiff.js';
 import './exportmodal.css';
@@ -12,11 +12,18 @@ interface ExportModalProps {
 
 const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) => {
   const [dataUrl, setDataUrl] = React.useState<string | null>(null);
+  const [scale, setScale] = useState(1);
+
   useEffect(() => {
     if (layerRef && layerRef.current) {
       setDataUrl(layerRef.current.toDataURL());
     }
   }, [layerRef, isOpen]);
+
+  const handleScaleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setScale(Number(event.target.value));
+  };
+
   if (!isOpen) {
     return null;
   }
@@ -103,6 +110,10 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, layerRef}) =
           </div>
           <button className="close-button" onClick={onClose}>x</button>
           <div className="export-buttons">
+          <div className="slider-container">
+          <label htmlFor="scale-slider">Scaling</label>
+          <input type="range" min="0.1" max="2" step="0.1" value={scale} onChange={handleScaleChange} />
+          </div>
             <button className="export-button" onClick={handleExport}>Export to PNG</button>
             <button className="export-button" onClick={handleExportJPEG}>Export to JPEG</button>
             <button className="export-button" onClick={handleExportWEBP}>Export to WEBP</button>
