@@ -8,21 +8,55 @@ const LineTable = ({ properties, handleInputChange }) => {
   return (
     <TableContainer component={Paper} className="TableContainer dark-mode">
       <Table aria-label="line properties table">
-        <TableHead>
+      <TableHead>
           <TableRow>
+            <TableCell align='left'>Line</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
         {properties.map((property, index) => (
             <React.Fragment key={index}>
               <TableRow>
-                <TableCell component="th" scope="row">
-                  {property.name}
-                </TableCell>
-                <TableCell className="colorPickerContainer" colSpan={2}>
+                <TableCell className="colorPickerContainer" colSpan={3}>
                   <ColorPicker />
                 </TableCell>
               </TableRow>
+               <TableRow>
+                <TableCell component="th" scope="row">
+                  {property.name} Size
+                </TableCell>
+                <TableCell align="right">
+                  <Input
+                    type="text"
+                    className="input-fields"
+                    value={property.value1 === null ? '' : property.value1}
+                    onChange={handleInputChange(index, 'value1')}
+                    onBlur={handleInputChange(index, 'value1')}
+                    inputProps={{
+                      min: 0,
+                      max: 100,
+                    }}
+                  />
+                </TableCell>
+              </TableRow> 
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  {property.name} LineWeight
+                </TableCell>
+                <TableCell align="right">
+                  <Input
+                    type="text"
+                    className="input-fields"
+                    value={property.value1 === null ? '' : property.value2}
+                    onChange={handleInputChange(index, 'value2')}
+                    onBlur={handleInputChange(index, 'value2')}
+                    inputProps={{
+                      min: 0,
+                      max: 100,
+                    }}
+                  />
+                </TableCell>
+              </TableRow> 
             </React.Fragment>
           ))}
         </TableBody>

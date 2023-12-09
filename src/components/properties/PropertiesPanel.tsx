@@ -7,7 +7,8 @@ import "./propertiesPanel.css";
 
 function PropertiesPanel() {
   const [properties, setProperties] = useState([
-    { name: 'BG', value1: 50, value2: 50 }
+    { name: '', value1: 0, value2: 0 },
+
   ]);
 
   const handleInputChange = (index, value) => (event) => {
