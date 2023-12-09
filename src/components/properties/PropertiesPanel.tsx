@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import BackgroundTable from './BackgroundTable';
 import LineTable from './LineTable';
 import TextTable from './TextTable';
-// import React from "react";
 import "./propertiesPanel.css";
 
 function PropertiesPanel() {
   const [properties, setProperties] = useState([
     { name: '', value1: 0, value2: 0 },
-
   ]);
+
+  const [isPanelVisible, setIsPanelVisible] = useState(true);
+  const [activeTable, setActiveTable] = useState(0);
 
   const handleInputChange = (index, value) => (event) => {
     const inputValue = event.target.value === '' ? null : parseInt(event.target.value, 10);
@@ -26,10 +27,11 @@ function PropertiesPanel() {
     <LineTable properties={properties} handleInputChange={handleInputChange} />,
     <TextTable properties={properties} handleInputChange={handleInputChange} />
   ];
-  const [activeTable, setActiveTable] = useState(0);
 
   const handleKeyPress = (event) => {
-    if (event.key === 'q' || event.key === 'Q') {
+    if (event.key.toLowerCase() === 'p') {
+      setIsPanelVisible(!isPanelVisible);
+    } else if (event.key.toLowerCase() === 'q') {
       setActiveTable((activeTable + 1) % tables.length);
     }
   };
@@ -40,10 +42,10 @@ function PropertiesPanel() {
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [activeTable]);
+  }, [isPanelVisible, activeTable]);
 
   return (
-    <div className="panel-properties restrict-height absolute flex flex-col cursor-default top-[48px] overflow-hidden right-0 h-full w-[240px] bg-core-grey select-none">
+    <div className={`panel-properties restrict-height absolute flex flex-col cursor-default top-[48px] overflow-hidden right-0 h-full w-[240px] bg-core-grey select-none ${isPanelVisible ? '' : 'hidden'} ${isPanelVisible ? 'fade-in' : 'fade-out'}`}>
       <div className="flex justify-center items-center text-2xl">Properties</div>
       {tables[activeTable]}
     </div>

@@ -5,6 +5,7 @@
 
 .panel-properties {
     border-left: 1px solid #353535;
+    transition: opacity 2s ease-in-out;
 }
 
 .panel-properties .TableContainer {
@@ -21,3 +22,11 @@
 .panel-properties .color-picker {
     background-color: var(--primary-color); /* Use the global color variable */
   }
+
+.fade-in {
+opacity: 1;
+}
+
+.fade-out {
+opacity: 0;
+}
