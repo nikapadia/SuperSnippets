@@ -1,8 +1,15 @@
-import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Input, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Input, Select, MenuItem, Box, InputLabel } from '@mui/material';
 import ColorPicker from "./ColorPicker";
 
 const TextTable = ({ properties, handleInputChange }) => {
+  const [selectedFont, setSelectedFont] = useState('');
+
+  const handleFontChange = (index, value) => (event) => {
+    setSelectedFont(event.target.value);
+    handleInputChange(index, value)(event);
+  };
+
   return (
     <TableContainer component={Paper} className="TableContainer dark-mode">
       <Table aria-label="text properties table">
@@ -51,18 +58,21 @@ const TextTable = ({ properties, handleInputChange }) => {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell component="th" scope="row">
-                  {property.name} Font
-                </TableCell>
-                <TableCell  colSpan={3}>
-                  <Select
-                    value={property.font || ''}
-                    onChange={handleInputChange(index, 'font')}
-                  >
-                    <MenuItem value="Arial">Arial</MenuItem>
-                    <MenuItem value="Times New Roman">Times New Roman</MenuItem>
-                    {/* Add more font options as needed */}
-                  </Select>
+                <TableCell colSpan={3}>
+                  {/* Wrap the Select in a Box to control its width */}
+                  <Box width="100%">
+                    {/* Display selected font inside the Select with white color */}
+                    <Select
+                      value={selectedFont || ''}
+                      onChange={handleFontChange(index, 'font')}
+                      fullWidth
+                      style = {{ color: 'white'}}
+                    >
+                      <MenuItem value="Arial">Arial</MenuItem>
+                      <MenuItem value="Times New Roman">Times New Roman</MenuItem>
+                      {/* Add more font options as needed */}
+                    </Select>
+                  </Box>
                 </TableCell>
               </TableRow>
               <TableRow>
