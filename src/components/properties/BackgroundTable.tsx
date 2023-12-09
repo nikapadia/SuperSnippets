@@ -23,7 +23,7 @@ const BackgroundTable = ({ properties, handleInputChange }) => {
         <TableHead>
           {/* Table header row */}
           <TableRow>
-            <TableCell align='left'>Background</TableCell>
+          <TableCell align='left' style={{ fontSize: '20px' }}>Background</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -36,6 +36,24 @@ const BackgroundTable = ({ properties, handleInputChange }) => {
                   <ColorPicker />
                 </TableCell>
               </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  {property.name} Opacity
+                </TableCell>
+                <TableCell align="right">
+                  <Input
+                    type="text"
+                    className="input-fields"
+                    value={property.value1 === null ? '' : property.value1}
+                    onChange={handleInputChange(index, 'value1')}
+                    onBlur={handleInputChange(index, 'value1')}
+                    inputProps={{
+                      min: 0,
+                      max: 100,
+                    }}
+                  />
+                </TableCell>
+              </TableRow> 
               {/* Add a new row for displaying dimensions */}
               <TableRow>
                 <TableCell align="right" colSpan={2}>

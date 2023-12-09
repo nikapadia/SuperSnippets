@@ -10,7 +10,7 @@ const LineTable = ({ properties, handleInputChange }) => {
       <Table aria-label="line properties table">
       <TableHead>
           <TableRow>
-            <TableCell align='left'>Line</TableCell>
+          <TableCell align='left' style={{ fontSize: '20px' }}>Line</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
