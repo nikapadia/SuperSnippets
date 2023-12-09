@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BackgroundTable from './BackgroundTable';
 import LineTable from './LineTable';
-import Prop2Table from './Prop2Table';
+import TextTable from './TextTable';
 // import React from "react";
 import "./propertiesPanel.css";
 
@@ -24,7 +24,7 @@ function PropertiesPanel() {
   const tables = [
     <BackgroundTable properties={properties} handleInputChange={handleInputChange} />,
     <LineTable properties={properties} handleInputChange={handleInputChange} />,
-    <Prop2Table />
+    <TextTable properties={properties} handleInputChange={handleInputChange} />
   ];
   const [activeTable, setActiveTable] = useState(0);
 
