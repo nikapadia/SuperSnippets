@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BackgroundTable from './BackgroundTable';
-import Prop1Table from './Prop1Table';
+import LineTable from './LineTable';
 import Prop2Table from './Prop2Table';
 // import React from "react";
 import "./propertiesPanel.css";
@@ -22,15 +22,15 @@ function PropertiesPanel() {
 
   const tables = [
     <BackgroundTable properties={properties} handleInputChange={handleInputChange} />,
-    <Prop1Table />,
+    <LineTable properties={properties} handleInputChange={handleInputChange} />,
     <Prop2Table />
   ];
   const [activeTable, setActiveTable] = useState(0);
 
   const handleKeyPress = (event) => {
-    // if (event.key === 'q' || event.key === 'Q') {
-    //   setActiveTable((activeTable + 1) % tables.length);
-    // }
+    if (event.key === 'q' || event.key === 'Q') {
+      setActiveTable((activeTable + 1) % tables.length);
+    }
   };
 
   useEffect(() => {

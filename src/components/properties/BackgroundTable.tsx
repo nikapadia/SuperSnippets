@@ -10,8 +10,6 @@ const BackgroundTable = ({ properties, handleInputChange }) => {
       <Table aria-label="properties table">
         <TableHead>
           <TableRow>
-            <TableCell>Property Name</TableCell>
-            <TableCell align="right" colSpan={2}>Input</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
